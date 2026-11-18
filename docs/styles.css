@@ -152,6 +152,27 @@ main { padding-bottom: 3rem; }
 .intro { margin: 1.5rem 0 0.5rem; max-width: 640px; }
 .intro-note { color: var(--muted); font-size: 0.95rem; }
 
+/* Hero with mascot */
+
+.hero {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin: 1.5rem 0 0.5rem;
+}
+.hero-img {
+  width: 220px;
+  height: auto;
+  flex: none;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.hero .intro { margin: 0; }
+@media (max-width: 640px) {
+  .hero { flex-direction: column; align-items: flex-start; }
+  .hero-img { width: 180px; }
+}
+
 section { margin-top: 2rem; }
 section h2 { font-size: 1.25rem; margin: 0 0 0.75rem; }
 

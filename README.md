@@ -1,5 +1,7 @@
 # AgentQuest
 
+<p align="center"><img src="docs/kingkong-agent.jpg" alt="King Kong, the AgentQuest mascot — a gorilla dressed as a secret agent" width="320" /></p>
+
 On-chain achievement badges for Binance Agent ID holders. Prove — purely
 on-chain, with no server, no voucher, and no oracle — that you hold NFTs
 across the Agent ID ecosystem, and claim soulbound badges for it.
