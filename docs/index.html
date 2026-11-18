@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="AgentQuest — on-chain achievement badges for Binance Agent ID holders. Soulbound, gas-only, verified purely on-chain. No server, no voucher, no fees." />
+  <title>AgentQuest — Achievement Badges for Agent ID Holders</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">AQ</span>
+        <div>
+          <h1>AgentQuest</h1>
+          <p class="brand-sub">On-chain achievement badges for Binance Agent ID holders</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="network-pill" class="pill pill-muted" hidden></span>
+        <button id="connect-btn" class="btn btn-primary" type="button">Connect wallet</button>
+        <span id="account-label" class="account-label" hidden></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="deploy-banner" class="banner banner-warn" hidden>
+      <strong>Contract not deployed yet.</strong>
+      <span>The AgentQuest contract has not been deployed to BNB Chain, so quest
+      eligibility and claims are unavailable right now. The Agent ID status
+      check below still works.</span>
+    </div>
+
+    <div id="error-banner" class="banner banner-error" hidden></div>
+
+    <section class="intro" aria-label="About AgentQuest">
+      <p>
+        Earn soulbound badges by proving, purely on-chain, that you hold NFTs
+        from Agent ID ecosystem collections. No server, no voucher, no sign-up.
+        Claims cost gas only — the contract accepts no payment at all.
+      </p>
+      <p class="intro-note">
+        Badges are non-transferable achievement records (ERC-5192). They have
+        no price and cannot be sold.
+      </p>
+    </section>
+
+    <section id="status-section" aria-label="Your status">
+      <div class="card-grid">
+        <div class="card" id="agent-id-card">
+          <h2>Agent ID</h2>
+          <p id="agent-id-status" class="big-status status-muted">Connect your wallet to check.</p>
+          <p class="card-note">
+            An Agent ID (<span class="mono">.ai</span> name) is required to claim any badge.
+            It is claimed once, free, inside the Binance app.
+          </p>
+        </div>
+        <div class="card" id="held-card">
+          <h2>Curated collections held</h2>
+          <p id="held-status" class="big-status status-muted">—</p>
+          <div class="progress" aria-hidden="true"><div id="held-bar" class="progress-bar"></div></div>
+          <p class="card-note" id="held-note">
+            Distinct curated collections this wallet holds at least one NFT of.
+          </p>
+        </div>
+      </div>
+      <div id="network-warning" class="banner banner-warn" hidden>
+        <strong>Wrong network.</strong>
+        <span>Your wallet is not on BNB Smart Chain (chain 56). Claims need BSC.</span>
+        <button id="switch-network-btn" class="btn btn-small" type="button">Switch to BSC</button>
+      </div>
+    </section>
+
+    <section id="quests-section" aria-label="Quests">
+      <div class="section-head">
+        <h2>Quests</h2>
+        <button id="claim-all-btn" class="btn btn-primary" type="button" disabled>
+          Claim all eligible
+        </button>
+      </div>
+      <p class="section-note">
+        Eligibility is checked on-chain before every claim. Each claim is a
+        separate transaction you review and confirm yourself in your wallet.
+      </p>
+      <div id="quest-list" class="quest-grid">
+        <p class="empty-note">Connect your wallet to see your quests.</p>
+      </div>
+      <div id="tx-status" class="tx-status" hidden></div>
+    </section>
+
+    <section id="badges-section" aria-label="Your badges">
+      <h2>Your badges</h2>
+      <div id="badge-list" class="badge-grid">
+        <p class="empty-note">No badges yet. Claim a quest above to earn your first badge.</p>
+      </div>
+    </section>
+
+    <section id="curated-section" aria-label="Curated collections">
+      <details>
+        <summary>Curated collections (<span id="curated-count">30</span>) — what counts toward Collector quests</summary>
+        <ul id="curated-list" class="curated-list"></ul>
+        <p class="card-note">
+          This list is fixed in the contract at deployment and cannot be changed
+          afterwards. Minted counts are a snapshot from 18 Nov 2026.
+        </p>
+      </details>
+    </section>
+
+    <section id="about-section" aria-label="How it works">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li><strong>Connect</strong> your wallet (MetaMask or Binance Wallet) on BNB Smart Chain.</li>
+        <li><strong>Check</strong> — the page reads the contract's eligibility views for your wallet. No transaction is sent.</li>
+        <li><strong>Claim</strong> — each eligible badge is one transaction you confirm in your wallet. Gas only, value 0.</li>
+      </ol>
+      <ul class="facts">
+        <li><strong>Contract:</strong> <span id="contract-address" class="mono">not deployed yet</span> <a id="contract-link" href="#" hidden>View on BscScan</a></li>
+        <li><strong>Agent ID registry:</strong> <a class="mono" href="https://bscscan.com/address/0x60b9262456de011f7d15a54cdd8c48baaa8b022f" target="_blank" rel="noopener">0x60b9…022f</a></li>
+        <li><strong>Standard:</strong> ERC-721, soulbound (ERC-5192) — badges cannot be transferred or sold.</li>
+        <li><strong>Metadata:</strong> fully on-chain SVG, no IPFS or server.</li>
+        <li><strong>Admin:</strong> none. No owner, no pause, no upgrade, no fees, no withdraw function.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>
+        AgentQuest — built for the Binance Agent ID Hackathon (submission closes
+        9 Dec 2026). Source code is open-source and the contract is verified on
+        BscScan after deployment.
+      </p>
+      <p class="footer-note">
+        Badges are achievement records, not investments. Nothing here promises
+        any return, reward, or future value.
+      </p>
+    </div>
+  </footer>
+
+  <noscript>
+    <p style="text-align:center;padding:2rem">AgentQuest needs JavaScript to talk to your wallet and read the blockchain.</p>
+  </noscript>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
