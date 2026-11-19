@@ -342,4 +342,9 @@ summary { cursor: pointer; font-weight: 600; }
 }
 .footer-note { color: var(--faint); }
 
+/* KONG benefits box */
+
+.kong-box { margin-top: 1rem; }
+.kong-box .btn { margin-top: 0.75rem; display: inline-block; }
+
 [hidden] { display: none !important; }

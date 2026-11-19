@@ -153,6 +153,7 @@ function disconnectWallet() {
   updateWalletUI();
   renderAgentId();
   renderHeld();
+  renderKongBenefits();
   renderQuests();
   renderBadgesEmpty("Connect your wallet to see your badges.");
 }
@@ -299,6 +300,7 @@ async function refreshAll() {
   renderHeld();
   renderQuests();
   await renderBadges();
+  renderKongBenefits();
 }
 
 function renderAgentId() {
@@ -343,6 +345,31 @@ function renderHeld() {
     status.held >= maxThreshold
       ? "You hold NFTs from enough curated collections for every Collector quest."
       : "Distinct curated collections this wallet holds at least one NFT of.";
+}
+
+function renderKongBenefits() {
+  const pill = $("kong-pill");
+  const statusEl = $("kong-status");
+  if (!account) {
+    pill.textContent = "Connect your wallet to check your badges.";
+    pill.className = "pill pill-muted";
+    statusEl.textContent = "Connect your wallet to see your badges.";
+    return;
+  }
+  const count = status.quests.filter((q) => q.claimed).length;
+  if (count === 0) {
+    pill.textContent = "0 of 4 badges";
+    pill.className = "pill pill-warn";
+    statusEl.textContent =
+      "You hold no badges yet — claim a quest below to unlock the $KONG airdrop and buyer bonus.";
+  } else {
+    pill.textContent = `✓ ${count} of 4 badges`;
+    pill.className = "pill pill-ok";
+    statusEl.textContent =
+      count === 4
+        ? "You hold all 4 badges — maximum airdrop share, and the +20% buyer bonus when you buy $KONG shares."
+        : `You hold ${count} of 4 badges — you're eligible for the $KONG airdrop and the +20% buyer bonus. Claim the rest to grow your share.`;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -819,6 +846,7 @@ async function init() {
   renderContractInfo();
   renderAgentId();
   renderHeld();
+  renderKongBenefits();
   renderQuests();
   renderBadgesEmpty("Connect your wallet to see your badges.");
 
