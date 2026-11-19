@@ -12,6 +12,48 @@ export const CONTRACT_ADDRESS = "0x26ad277193ff31bd086a47bf7b1d25a93573c989";
 // Binance Agent ID Hackathon announcement). Never changes.
 export const AGENT_ID_ADDRESS = "0x60b9262456de011f7d15a54cdd8c48baaa8b022f";
 
+// AgentQuestStreak — daily check-in companion contract (deployed 19 Nov 2026).
+// Gate: hold >=1 AgentQuest badge + a Binance Agent ID. This is the ONLY
+// canonical streak contract address — do not point this at any other address.
+export const STREAK_ADDRESS = "0xac9a16f991712aebe04b24e1a98e6b7c0d451afb";
+
+// Minimal AgentQuestStreak ABI — only the functions this frontend uses.
+// Signatures verified against src/AgentQuestStreak.sol.
+// Custom errors are included so ethers v6 can decode revert reasons.
+export const STREAK_ABI = [
+  // Check-in (nonpayable — no value can ever be attached)
+  "function checkIn()",
+  // Streak views (free off-chain reads)
+  "function streak(address holder) view returns (uint256)",
+  "function totalCheckins(address holder) view returns (uint256)",
+  "function lastCheckinDay(address holder) view returns (uint256)",
+  "function hasCheckedInToday(address user) view returns (bool)",
+  "function milestoneClaimed(address holder, uint8 milestone) view returns (bool)",
+  "function milestoneDays() view returns (uint8[4])",
+  "function tokenMilestone(uint256 tokenId) view returns (uint8)",
+  "function nextTokenId() view returns (uint256)",
+  // Wiring sanity checks (must match CONTRACT_ADDRESS / AGENT_ID_ADDRESS)
+  "function agentQuest() view returns (address)",
+  "function agentId() view returns (address)",
+  // Events (used to learn whether a check-in minted a milestone badge)
+  "event CheckedIn(address indexed user, uint256 day, uint256 streak, uint256 totalCheckins)",
+  "event MilestoneMinted(address indexed user, uint8 milestone, uint256 tokenId)",
+  // Custom errors (for human-readable revert messages)
+  "error AlreadyCheckedInToday(address user, uint256 day)",
+  "error NotAgentQuestHolder(address holder)",
+  "error NotAgentIdHolder(address holder)",
+  "error Soulbound()",
+];
+
+// Milestone thresholds. Days, names and colours match
+// AgentQuestStreak.sol exactly (3 green / 7 blue / 14 purple / 30 gold).
+export const STREAK_MILESTONES = [
+  { day: 3, name: "3-Day Streak", color: "#22c55e" },
+  { day: 7, name: "7-Day Streak", color: "#3b82f6" },
+  { day: 14, name: "14-Day Streak", color: "#a855f7" },
+  { day: 30, name: "30-Day Streak", color: "#eab308" },
+];
+
 // BNB Smart Chain mainnet.
 export const CHAIN_ID = 56;
 export const CHAIN_ID_HEX = "0x38";

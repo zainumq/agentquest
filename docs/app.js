@@ -11,6 +11,9 @@ import {
   AGENT_ID_ADDRESS,
   AGENTQUEST_ABI,
   AGENT_ID_ABI,
+  STREAK_ADDRESS,
+  STREAK_ABI,
+  STREAK_MILESTONES,
   BSCSCAN_BASE,
   BSC_CHAIN_PARAMS,
   CHAIN_ID,
@@ -44,6 +47,13 @@ const status = {
   hasAgentId: null, // boolean | null (unknown)
   held: null, // number of distinct curated collections held | null
   quests: QUESTS.map(() => ({ claimed: false, eligible: false })),
+  // Daily check-in streak (null fields = unknown, not yet read).
+  streak: {
+    current: null, // consecutive-day streak | null
+    total: null, // cumulative check-ins (never resets) | null
+    checkedInToday: null, // boolean | null
+    claimed: STREAK_MILESTONES.map(() => false), // milestone badge per threshold
+  },
 };
 
 // Read-only providers, tried in order until one answers.
@@ -55,6 +65,10 @@ function readContract(provider) {
 
 function agentIdContract(provider) {
   return new ethers.Contract(AGENT_ID_ADDRESS, AGENT_ID_ABI, provider);
+}
+
+function readStreakContract(provider) {
+  return new ethers.Contract(STREAK_ADDRESS, STREAK_ABI, provider);
 }
 
 /** Run `fn(provider)` against read providers in order; first success wins. */
@@ -85,9 +99,8 @@ function clearError() {
   $("error-banner").hidden = true;
 }
 
-function setTxStatus(lines) {
+function renderTxLines(box, lines) {
   // lines: array of { text } or { text, href } segments grouped per <p>.
-  const box = $("tx-status");
   box.replaceChildren();
   for (const line of lines) {
     const p = document.createElement("p");
@@ -108,9 +121,24 @@ function setTxStatus(lines) {
   box.hidden = false;
 }
 
+function setTxStatus(lines) {
+  renderTxLines($("tx-status"), lines);
+}
+
 function clearTxStatus() {
   $("tx-status").hidden = true;
   $("tx-status").replaceChildren();
+}
+
+// The check-in section has its own status box, so check-in messages never
+// collide with claim messages.
+function setStreakTxStatus(lines) {
+  renderTxLines($("streak-tx-status"), lines);
+}
+
+function clearStreakTxStatus() {
+  $("streak-tx-status").hidden = true;
+  $("streak-tx-status").replaceChildren();
 }
 
 // ---------------------------------------------------------------------------
@@ -148,12 +176,20 @@ function disconnectWallet() {
   status.hasAgentId = null;
   status.held = null;
   status.quests = QUESTS.map(() => ({ claimed: false, eligible: false }));
+  status.streak = {
+    current: null,
+    total: null,
+    checkedInToday: null,
+    claimed: STREAK_MILESTONES.map(() => false),
+  };
   clearError();
   clearTxStatus();
+  clearStreakTxStatus();
   updateWalletUI();
   renderAgentId();
   renderHeld();
   renderKongBenefits();
+  renderStreak();
   renderQuests();
   renderBadgesEmpty("Connect your wallet to see your badges.");
 }
@@ -252,6 +288,7 @@ async function refreshAll() {
   if (!isDeployed) {
     renderHeld();
     renderQuests();
+    renderStreak();
     renderBadgesEmpty("The contract is not deployed yet — no badges exist.");
     return;
   }
@@ -266,6 +303,7 @@ async function refreshAll() {
       );
       renderHeld();
       renderQuests();
+      renderStreak();
       renderBadgesEmpty("Contract configuration mismatch — see the warning above.");
       return;
     }
@@ -301,6 +339,7 @@ async function refreshAll() {
   renderQuests();
   await renderBadges();
   renderKongBenefits();
+  await refreshStreak();
 }
 
 function renderAgentId() {
@@ -369,6 +408,257 @@ function renderKongBenefits() {
       count === 4
         ? "You hold all 4 badges — maximum airdrop share, and the +20% buyer bonus when you buy $KONG shares."
         : `You hold ${count} of 4 badges — you're eligible for the $KONG airdrop and the +20% buyer bonus. Claim the rest to grow your share.`;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Daily check-in (AgentQuestStreak companion contract)
+// ---------------------------------------------------------------------------
+
+function badgeCount() {
+  return status.quests.filter((q) => q.claimed).length;
+}
+
+function resetStreakStatus() {
+  status.streak = {
+    current: null,
+    total: null,
+    checkedInToday: null,
+    claimed: STREAK_MILESTONES.map(() => false),
+  };
+}
+
+async function refreshStreak() {
+  if (!account) return;
+  if (!isDeployed) {
+    renderStreak();
+    return;
+  }
+
+  // Sanity check: the streak contract must point at this AgentQuest contract
+  // and the canonical Agent ID registry. If it does not, something is wrong.
+  try {
+    const [onChainQuest, onChainAgentId] = await Promise.all([
+      withReadProvider((p) => readStreakContract(p).agentQuest()),
+      withReadProvider((p) => readStreakContract(p).agentId()),
+    ]);
+    if (
+      onChainQuest.toLowerCase() !== CONTRACT_ADDRESS.toLowerCase() ||
+      onChainAgentId.toLowerCase() !== AGENT_ID_ADDRESS.toLowerCase()
+    ) {
+      showError(
+        "Warning: the check-in contract points at different contracts than expected. Check-in is disabled."
+      );
+      resetStreakStatus();
+      renderStreak();
+      return;
+    }
+  } catch {
+    // A failure here means RPC trouble, which the reads below will surface.
+  }
+
+  try {
+    const [current, total, checkedIn, claimed] = await Promise.all([
+      withReadProvider((p) => readStreakContract(p).streak(account)),
+      withReadProvider((p) => readStreakContract(p).totalCheckins(account)),
+      withReadProvider((p) => readStreakContract(p).hasCheckedInToday(account)),
+      Promise.all(
+        STREAK_MILESTONES.map((m) =>
+          withReadProvider((p) => readStreakContract(p).milestoneClaimed(account, m.day))
+        )
+      ),
+    ]);
+    status.streak = {
+      current: Number(current),
+      total: Number(total),
+      checkedInToday: checkedIn,
+      claimed,
+    };
+  } catch {
+    resetStreakStatus();
+  }
+  renderStreak();
+}
+
+function renderStreak() {
+  const pill = $("streak-pill");
+  const currentEl = $("streak-current");
+  const totalEl = $("streak-total");
+  const todayEl = $("streak-today");
+  const statusEl = $("streak-status");
+  const btn = $("checkin-btn");
+  const noBadge = $("streak-no-badge");
+  const list = $("streak-milestones");
+
+  const setUnknown = () => {
+    currentEl.textContent = "—";
+    currentEl.className = "big-status status-muted";
+    totalEl.textContent = "—";
+    totalEl.className = "big-status status-muted";
+    todayEl.textContent = "—";
+    todayEl.className = "big-status status-muted";
+  };
+
+  // Milestone list — always rendered; claimed state comes from status.
+  list.replaceChildren();
+  for (let i = 0; i < STREAK_MILESTONES.length; i++) {
+    const m = STREAK_MILESTONES[i];
+    const li = document.createElement("li");
+    const label = document.createElement("span");
+    const dot = document.createElement("span");
+    dot.className = "milestone-dot";
+    dot.style.background = m.color;
+    label.appendChild(dot);
+    label.appendChild(document.createTextNode(`${m.name} — ${m.day}-day streak`));
+    li.appendChild(label);
+    const milestonePill = document.createElement("span");
+    const claimed = status.streak.claimed[i];
+    milestonePill.className = `pill ${claimed ? "pill-ok" : "pill-muted"}`;
+    milestonePill.textContent = claimed ? "✓ Claimed" : "Not earned yet";
+    li.appendChild(milestonePill);
+    list.appendChild(li);
+  }
+
+  if (!account) {
+    pill.textContent = "Connect your wallet to check your streak.";
+    pill.className = "pill pill-muted";
+    setUnknown();
+    statusEl.textContent = "Connect your wallet to see your streak.";
+    btn.disabled = true;
+    btn.textContent = "Check in";
+    btn.hidden = false;
+    noBadge.hidden = true;
+    return;
+  }
+
+  if (!isDeployed) {
+    pill.textContent = "Not deployed yet";
+    pill.className = "pill pill-muted";
+    setUnknown();
+    statusEl.textContent = "Available after the contract is deployed.";
+    btn.disabled = true;
+    btn.hidden = false;
+    noBadge.hidden = true;
+    return;
+  }
+
+  const s = status.streak;
+  if (s.current === null) {
+    pill.textContent = "Could not check — RPC unreachable.";
+    pill.className = "pill pill-warn";
+    setUnknown();
+    statusEl.textContent = "Could not read streak status from BNB Chain.";
+    btn.disabled = true;
+    btn.hidden = false;
+    noBadge.hidden = true;
+    return;
+  }
+
+  currentEl.textContent = `${s.current} day${s.current === 1 ? "" : "s"}`;
+  currentEl.className = "big-status";
+  totalEl.textContent = String(s.total);
+  totalEl.className = "big-status";
+  if (s.checkedInToday) {
+    todayEl.textContent = "✓ Checked in";
+    todayEl.className = "big-status status-ok";
+  } else {
+    todayEl.textContent = "Not yet";
+    todayEl.className = "big-status status-warn";
+  }
+
+  // Check-in needs at least one AgentQuest badge — the button becomes a
+  // pointer to the quests below instead.
+  if (badgeCount() === 0) {
+    pill.textContent = "Needs a badge";
+    pill.className = "pill pill-warn";
+    statusEl.textContent = "Check-in unlocks once you hold an AgentQuest badge.";
+    btn.hidden = true;
+    noBadge.hidden = false;
+    return;
+  }
+  noBadge.hidden = true;
+  btn.hidden = false;
+
+  if (s.checkedInToday) {
+    pill.textContent = `✓ Checked in — streak ${s.current}`;
+    pill.className = "pill pill-ok";
+    statusEl.textContent =
+      "You're checked in for today. Come back tomorrow (UTC) to keep the streak going.";
+    btn.disabled = true;
+    btn.textContent = "Checked in ✓";
+    return;
+  }
+
+  pill.textContent = `Streak ${s.current} · ${s.total} total check-ins`;
+  pill.className = "pill pill-muted";
+  const next = STREAK_MILESTONES.find((m, i) => !s.claimed[i] && m.day > s.current);
+  statusEl.textContent = next
+    ? `Check in now to reach streak ${s.current + 1}. Next milestone: the ${next.name} badge at a ${next.day}-day streak.`
+    : "Check in now to grow your streak and your share of the KONG streak pool.";
+  btn.disabled = busy;
+  btn.textContent = "Check in";
+}
+
+function streakWriteContract() {
+  return new ethers.Contract(STREAK_ADDRESS, STREAK_ABI, signer);
+}
+
+async function checkIn() {
+  if (busy || !account) return;
+  setBusy(true);
+  clearStreakTxStatus();
+  try {
+    await ensureBsc();
+    const write = streakWriteContract();
+    // Fresh check right before sending — the on-page state may be stale,
+    // and a reverted check-in still costs gas.
+    const already = await withReadProvider((p) =>
+      readStreakContract(p).hasCheckedInToday(account)
+    );
+    if (already) throw new Error("ALREADY_CHECKED_IN");
+    // Dry run against the wallet's own node: catches a revert before any
+    // gas is spent.
+    await write.checkIn.staticCall();
+    const tx = await write.checkIn();
+    setStreakTxStatus([
+      [{ text: "Checking in… waiting for confirmation. " }],
+      [{ text: "Transaction: " }, { text: shortAddress(tx.hash), href: bscscanTx(tx.hash) }],
+    ]);
+    const receipt = await tx.wait(1);
+    // Did this check-in mint a milestone badge?
+    let milestone = null;
+    const iface = new ethers.Interface(STREAK_ABI);
+    for (const log of receipt.logs) {
+      if (log.address.toLowerCase() !== STREAK_ADDRESS.toLowerCase()) continue;
+      let parsed = null;
+      try {
+        parsed = iface.parseLog(log);
+      } catch {
+        continue;
+      }
+      if (
+        parsed &&
+        parsed.name === "MilestoneMinted" &&
+        parsed.args.user.toLowerCase() === account.toLowerCase()
+      ) {
+        milestone = Number(parsed.args.milestone);
+      }
+    }
+    setStreakTxStatus([
+      [
+        {
+          text: milestone
+            ? `✓ Checked in — you earned the ${milestone}-Day Streak badge! `
+            : "✓ Checked in. ",
+        },
+      ],
+      [{ text: "Transaction: " }, { text: shortAddress(tx.hash), href: bscscanTx(tx.hash) }],
+    ]);
+    await refreshAll();
+  } catch (err) {
+    setStreakTxStatus([[{ text: `✗ Check-in failed: ${friendlyError(err)}` }]]);
+  } finally {
+    setBusy(false);
   }
 }
 
@@ -466,6 +756,7 @@ function updateClaimAllButton() {
 function setBusy(value) {
   busy = value;
   renderQuests(); // re-renders buttons in their enabled/disabled state
+  renderStreak(); // the check-in button follows the same busy state
 }
 
 // ---------------------------------------------------------------------------
@@ -755,6 +1046,9 @@ function friendlyError(err) {
   if (msg === "NOT_ELIGIBLE_NOW") {
     return "This wallet is no longer eligible for that quest. The page has the latest status — please refresh.";
   }
+  if (msg === "ALREADY_CHECKED_IN") {
+    return "You already checked in today. Come back tomorrow (UTC).";
+  }
   if (code === 4001 || /user rejected|user denied/i.test(msg)) {
     return "Transaction rejected in your wallet. Nothing was sent.";
   }
@@ -764,8 +1058,14 @@ function friendlyError(err) {
   if (/AlreadyClaimed/.test(msg)) {
     return "You already claimed this badge.";
   }
+  if (/AlreadyCheckedInToday/.test(msg)) {
+    return "You already checked in today. Come back tomorrow (UTC).";
+  }
+  if (/NotAgentQuestHolder/.test(msg)) {
+    return "This wallet holds no AgentQuest badge yet — claim one first to check in.";
+  }
   if (/NotAgentIdHolder/.test(msg)) {
-    return "This wallet does not hold an Agent ID, which is required to claim.";
+    return "This wallet does not hold an Agent ID, which is required for badges and check-ins.";
   }
   if (/NotEligible/.test(msg)) {
     return "This wallet does not meet this quest's requirement yet.";
@@ -847,6 +1147,7 @@ async function init() {
   renderAgentId();
   renderHeld();
   renderKongBenefits();
+  renderStreak();
   renderQuests();
   renderBadgesEmpty("Connect your wallet to see your badges.");
 
@@ -862,6 +1163,7 @@ async function init() {
     }
   });
   $("claim-all-btn").addEventListener("click", claimAllQuests);
+  $("checkin-btn").addEventListener("click", checkIn);
 
   wireWalletEvents();
 

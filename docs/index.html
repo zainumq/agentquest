@@ -55,6 +55,58 @@
       </div>
     </section>
 
+    <section id="streak-section" aria-label="Daily check-in">
+      <div class="section-head">
+        <h2>Daily Check-in</h2>
+        <span id="streak-pill" class="pill pill-muted">Connect your wallet to check your streak.</span>
+      </div>
+      <p class="section-note">
+        Check in once a day to build a streak. Each check-in is one
+        transaction, gas only (about Rp100), value 0 — no approval, no fee.
+        Streaks of 3, 7, 14 and 30 days auto-mint soulbound milestone badges,
+        and your total check-ins count toward a share of a 3,000,000 KONG
+        pool at $KONG graduation.
+      </p>
+      <div class="card-grid">
+        <div class="card">
+          <h2>Current streak</h2>
+          <p id="streak-current" class="big-status status-muted">—</p>
+          <p class="card-note">Consecutive UTC days checked in. Miss a full UTC day and it resets to 1.</p>
+        </div>
+        <div class="card">
+          <h2>Total check-ins</h2>
+          <p id="streak-total" class="big-status status-muted">—</p>
+          <p class="card-note">All your check-ins, ever. This never resets — it is your share of the KONG streak pool.</p>
+        </div>
+        <div class="card">
+          <h2>Today</h2>
+          <p id="streak-today" class="big-status status-muted">—</p>
+          <p class="card-note">One check-in per UTC day.</p>
+        </div>
+      </div>
+      <div class="card streak-box">
+        <p id="streak-status" class="empty-note">Connect your wallet to see your streak.</p>
+        <ul id="streak-milestones" class="milestone-list"></ul>
+        <div class="banner banner-warn">
+          <strong>UTC days, not 24 hours.</strong>
+          <span>Streaks run on UTC days: check in at 23:50 UTC and again at
+          00:10 UTC the next day and your streak continues — but miss a full
+          UTC day and your streak resets. Your total check-ins are never
+          affected.</span>
+        </div>
+        <button id="checkin-btn" class="btn btn-primary" type="button" disabled>Check in</button>
+        <p id="streak-no-badge" class="card-note" hidden>You need at least one AgentQuest badge to check in. <a href="#quests-section">Claim a badge below</a> — it's free, gas only.</p>
+        <p class="card-note">
+          The 3,000,000 KONG streak pool is distributed at $KONG graduation
+          via a Merkle distributor, pro-rata by total check-ins. No
+          distribution if the sale does not graduate, and KONG's value is
+          not guaranteed. Streak contract:
+          <a class="mono" href="https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb" target="_blank" rel="noopener">0xac9a…afb</a>
+        </p>
+        <div id="streak-tx-status" class="tx-status" hidden></div>
+      </div>
+    </section>
+
     <section id="kong-section" aria-label="KONG benefits for badge holders">
       <div class="section-head">
         <h2>Your badges earn $KONG.</h2>

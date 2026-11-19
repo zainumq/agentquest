@@ -347,4 +347,32 @@ summary { cursor: pointer; font-weight: 600; }
 .kong-box { margin-top: 1rem; }
 .kong-box .btn { margin-top: 0.75rem; display: inline-block; }
 
+/* Daily check-in */
+
+.streak-box { margin-top: 1rem; }
+.streak-box .btn { margin-top: 0.75rem; }
+
+.milestone-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+.milestone-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.milestone-dot {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
 [hidden] { display: none !important; }
