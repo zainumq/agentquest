@@ -670,9 +670,6 @@ async function checkIn() {
 
 const LEADERBOARD_URL = "./leaderboard.json";
 const LEADERBOARD_TOP_N = 20;
-// Pool-price estimate only (12,600 USDT / 250,000,000 KONG at graduation);
-// KONG has no market price until the sale graduates.
-const KONG_IDR_ESTIMATE = 0.92;
 
 let leaderboardData = null; // parsed leaderboard.json | null (not loaded / failed)
 
@@ -777,10 +774,8 @@ function renderLeaderboard() {
 
     const share = document.createElement("td");
     share.className = "num";
-    const idr = Math.round((e.est_kong ?? 0) * KONG_IDR_ESTIMATE);
     share.textContent =
-      `≈ ${(e.est_kong ?? 0).toLocaleString("en-US", { maximumFractionDigits: 0 })} KONG` +
-      ` (≈ Rp${idr.toLocaleString("en-US")})`;
+      `≈ ${(e.est_kong ?? 0).toLocaleString("en-US", { maximumFractionDigits: 0 })} KONG`;
     row.appendChild(share);
 
     body.appendChild(row);
@@ -790,10 +785,9 @@ function renderLeaderboard() {
   if (youLower) {
     youEl.hidden = false;
     if (youEntry) {
-      const idr = Math.round((youEntry.est_kong ?? 0) * KONG_IDR_ESTIMATE);
       youEl.textContent =
         `You are ranked #${youEntry.rank} with ${youEntry.total_days} total check-in day${youEntry.total_days === 1 ? "" : "s"} ` +
-        `(est. share ≈ ${youEntry.est_kong.toLocaleString("en-US", { maximumFractionDigits: 0 })} KONG, ≈ Rp${idr.toLocaleString("en-US")}). ` +
+        `(est. share ≈ ${youEntry.est_kong.toLocaleString("en-US", { maximumFractionDigits: 0 })} KONG). ` +
         "Check in daily to climb higher.";
     } else if (leaderboardData.entries.some((e) => e.address.toLowerCase() === youLower)) {
       const full = leaderboardData.entries.find((e) => e.address.toLowerCase() === youLower);
