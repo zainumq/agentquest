@@ -208,6 +208,7 @@ function updateWalletUI() {
     label.hidden = true;
   }
   updateNetworkUI();
+  renderLeaderboard(); // re-highlights (or clears) the connected wallet's row
 }
 
 function updateNetworkUI() {
@@ -659,6 +660,155 @@ async function checkIn() {
     setStreakTxStatus([[{ text: `✗ Check-in failed: ${friendlyError(err)}` }]]);
   } finally {
     setBusy(false);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Check-in leaderboard (data snapshot generated off-chain, see
+// ../agentquest-leaderboard.py — the page never needs a wallet for this)
+// ---------------------------------------------------------------------------
+
+const LEADERBOARD_URL = "./leaderboard.json";
+const LEADERBOARD_TOP_N = 20;
+// Pool-price estimate only (12,600 USDT / 250,000,000 KONG at graduation);
+// KONG has no market price until the sale graduates.
+const KONG_IDR_ESTIMATE = 0.92;
+
+let leaderboardData = null; // parsed leaderboard.json | null (not loaded / failed)
+
+async function loadLeaderboard() {
+  try {
+    const res = await fetch(LEADERBOARD_URL, { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (!data || !Array.isArray(data.entries)) throw new Error("bad leaderboard data");
+    leaderboardData = data;
+  } catch {
+    leaderboardData = null;
+  }
+  renderLeaderboard();
+}
+
+function renderLeaderboard() {
+  const pill = $("leaderboard-pill");
+  const meta = $("leaderboard-meta");
+  const table = $("leaderboard-table");
+  const body = $("leaderboard-body");
+  const youEl = $("leaderboard-you");
+  const updatedEl = $("leaderboard-updated");
+
+  youEl.hidden = true;
+  youEl.replaceChildren();
+
+  if (leaderboardData === null) {
+    pill.textContent = "Unavailable";
+    pill.className = "pill pill-warn";
+    meta.textContent =
+      "Could not load the leaderboard right now. Your check-ins are safe on-chain — try reloading the page.";
+    table.hidden = true;
+    body.replaceChildren();
+    updatedEl.textContent = "—";
+    return;
+  }
+
+  const entries = leaderboardData.entries.slice(0, LEADERBOARD_TOP_N);
+  const totalCheckers = leaderboardData.total_checkers ?? entries.length;
+  const totalDays = leaderboardData.total_days ?? 0;
+
+  pill.textContent = `${totalCheckers} checker${totalCheckers === 1 ? "" : "s"} · ${totalDays} total days`;
+  pill.className = "pill pill-muted";
+  meta.textContent =
+    totalCheckers === 0
+      ? "No check-ins yet — be the first to check in and top this board."
+      : `Top ${entries.length} of ${totalCheckers} checkers, by total check-in days.`;
+  updatedEl.textContent = leaderboardData.generated_at_wib ?? "—";
+
+  body.replaceChildren();
+  table.hidden = entries.length === 0;
+
+  const youLower = account ? account.toLowerCase() : null;
+  let youEntry = null;
+
+  for (const e of entries) {
+    const row = document.createElement("tr");
+    if (youLower && e.address.toLowerCase() === youLower) {
+      row.className = "row-you";
+      youEntry = e;
+    }
+
+    const rank = document.createElement("td");
+    rank.textContent = `#${e.rank}`;
+    row.appendChild(rank);
+
+    const wallet = document.createElement("td");
+    const link = document.createElement("a");
+    link.href = `${BSCSCAN_BASE}/address/${e.address}`;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.className = "mono";
+    link.textContent = shortAddress(e.address);
+    wallet.appendChild(link);
+    row.appendChild(wallet);
+
+    const days = document.createElement("td");
+    days.className = "num";
+    days.textContent = String(e.total_days);
+    row.appendChild(days);
+
+    const streak = document.createElement("td");
+    streak.className = "num";
+    streak.textContent = String(e.streak);
+    row.appendChild(streak);
+
+    const ms = document.createElement("td");
+    if (e.milestones.length === 0) {
+      ms.textContent = "—";
+    } else {
+      for (const day of e.milestones) {
+        const m = STREAK_MILESTONES.find((x) => x.day === day);
+        const chip = document.createElement("span");
+        chip.className = "ms-badge";
+        chip.style.setProperty("--ms-color", m ? m.color : "#9aa4b2");
+        chip.textContent = `${day}d`;
+        ms.appendChild(chip);
+      }
+    }
+    row.appendChild(ms);
+
+    const share = document.createElement("td");
+    share.className = "num";
+    const idr = Math.round((e.est_kong ?? 0) * KONG_IDR_ESTIMATE);
+    share.textContent =
+      `≈ ${(e.est_kong ?? 0).toLocaleString("en-US", { maximumFractionDigits: 0 })} KONG` +
+      ` (≈ Rp${idr.toLocaleString("en-US")})`;
+    row.appendChild(share);
+
+    body.appendChild(row);
+  }
+
+  // Personal line for the connected wallet.
+  if (youLower) {
+    youEl.hidden = false;
+    if (youEntry) {
+      const idr = Math.round((youEntry.est_kong ?? 0) * KONG_IDR_ESTIMATE);
+      youEl.textContent =
+        `You are ranked #${youEntry.rank} with ${youEntry.total_days} total check-in day${youEntry.total_days === 1 ? "" : "s"} ` +
+        `(est. share ≈ ${youEntry.est_kong.toLocaleString("en-US", { maximumFractionDigits: 0 })} KONG, ≈ Rp${idr.toLocaleString("en-US")}). ` +
+        "Check in daily to climb higher.";
+    } else if (leaderboardData.entries.some((e) => e.address.toLowerCase() === youLower)) {
+      const full = leaderboardData.entries.find((e) => e.address.toLowerCase() === youLower);
+      youEl.textContent =
+        `You are ranked #${full.rank} with ${full.total_days} total check-in day${full.total_days === 1 ? "" : "s"} — just outside the top ${LEADERBOARD_TOP_N} shown here.`;
+    } else {
+      const link = document.createElement("a");
+      link.href = "#streak-section";
+      link.textContent = "check in";
+      youEl.appendChild(document.createTextNode("You haven't checked in yet — "));
+      youEl.appendChild(link);
+      youEl.appendChild(
+        document.createTextNode(" daily to join the leaderboard and grow your share of the 3,000,000 KONG pool.")
+      );
+    }
   }
 }
 
@@ -1150,6 +1300,7 @@ async function init() {
   renderStreak();
   renderQuests();
   renderBadgesEmpty("Connect your wallet to see your badges.");
+  loadLeaderboard(); // no wallet needed; renders when the snapshot arrives
 
   $("connect-btn").addEventListener("click", () => {
     if (account) disconnectWallet();

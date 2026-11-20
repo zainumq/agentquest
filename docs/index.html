@@ -107,6 +107,45 @@
       </div>
     </section>
 
+    <section id="leaderboard-section" aria-label="Check-in leaderboard">
+      <div class="section-head">
+        <h2>Check-in Leaderboard</h2>
+        <span id="leaderboard-pill" class="pill pill-muted">Loading…</span>
+      </div>
+      <p class="section-note">
+        Top checkers by total check-in days. Your share of the 3,000,000 KONG
+        streak pool is proportional to your total check-in days at the $KONG
+        graduation snapshot — and only if the sale graduates.
+      </p>
+      <div class="card leaderboard-box">
+        <p id="leaderboard-meta" class="empty-note">Loading leaderboard…</p>
+        <div class="table-scroll">
+          <table id="leaderboard-table" class="leaderboard-table" hidden>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Wallet</th>
+                <th class="num">Total days</th>
+                <th class="num">Streak</th>
+                <th>Milestones</th>
+                <th class="num">Est. KONG share</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body"></tbody>
+          </table>
+        </div>
+        <p id="leaderboard-you" class="card-note" hidden></p>
+        <p class="card-note">
+          Data is updated daily; last update
+          <span id="leaderboard-updated">—</span>. Estimated shares are
+          computed from total check-in days as of that update; the final split
+          happens at the graduation snapshot, and only if the $KONG sale
+          graduates. KONG values use the pool price of about Rp0.92 per KONG
+          (estimate only — KONG has no market price until graduation).
+        </p>
+      </div>
+    </section>
+
     <section id="kong-section" aria-label="KONG benefits for badge holders">
       <div class="section-head">
         <h2>Your badges earn $KONG.</h2>
