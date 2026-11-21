@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-21T06:09:59+07:00",
-  "generated_at_wib": "21 Nov 2026 06:09",
+  "generated_at": "2026-11-21T07:17:26+07:00",
+  "generated_at_wib": "21 Nov 2026 07:17",
   "contract": "0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
   "pool_kong": 3000000,
-  "total_checkers": 56,
-  "total_days": 58,
+  "total_checkers": 58,
+  "total_days": 70,
   "entries": [
     {
       "rank": 1,
@@ -12,8 +12,8 @@
       "total_days": 2,
       "streak": 2,
       "milestones": [],
-      "est_kong": 103448.28,
-      "share_pct": 3.4483
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
     },
     {
       "rank": 2,
@@ -21,503 +21,521 @@
       "total_days": 2,
       "streak": 2,
       "milestones": [],
-      "est_kong": 103448.28,
-      "share_pct": 3.4483
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
     },
     {
       "rank": 3,
+      "address": "0x10420db5a314aa354db0716cc7f41ed1cd4fb96c",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 4,
+      "address": "0x17faf355188e7c5fdbc7c5c01ff39a4483c91c00",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 5,
+      "address": "0x2679ce7065307ad97032770547ada6caa6026cac",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 6,
+      "address": "0x3bdae1fad8aed2348c90cba433b7074145ac75af",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 7,
+      "address": "0x44ec61683c09afb6cf3a837c09eb530f6205b0eb",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 8,
+      "address": "0x89d67677cdf415cafaff521c905b45418f563308",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 9,
+      "address": "0xa938fe1e3b4555b2b48d9c90758e7cb575e6aa07",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 10,
+      "address": "0xaea7be9280fa282b7590987a2131f019d736bc0a",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 11,
+      "address": "0xd29d742c187c03da5f5fc885534e6ac07efb1ba8",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 12,
+      "address": "0xe5c5d6aaeb7201913341462501fb3571ee887071",
+      "total_days": 2,
+      "streak": 2,
+      "milestones": [],
+      "est_kong": 85714.29,
+      "share_pct": 2.8571
+    },
+    {
+      "rank": 13,
       "address": "0x012dbaa424e6ef38576fb8d3759139d82bf7ff0e",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 4,
+      "rank": 14,
       "address": "0x030f76b66f74c34e4477b67f761780adfe452ce5",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 5,
+      "rank": 15,
       "address": "0x038d385631ccd02c7abc8b73bb6467797dd26956",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 6,
+      "rank": 16,
       "address": "0x0730cddc9a8094388187b6ad9fd066ecaa7ad33a",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 7,
+      "rank": 17,
       "address": "0x08b29e0fc4f57ad844df2d0b509f201cfd20950d",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 8,
+      "rank": 18,
       "address": "0x0b4b3b70a1b96721bd46f2b0bfe22ea556342217",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 9,
-      "address": "0x10420db5a314aa354db0716cc7f41ed1cd4fb96c",
-      "total_days": 1,
-      "streak": 1,
-      "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
-    },
-    {
-      "rank": 10,
+      "rank": 19,
       "address": "0x125acd2a245715f3a80ede23afea93abb0d0c794",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 11,
-      "address": "0x17faf355188e7c5fdbc7c5c01ff39a4483c91c00",
-      "total_days": 1,
-      "streak": 1,
-      "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
-    },
-    {
-      "rank": 12,
-      "address": "0x2679ce7065307ad97032770547ada6caa6026cac",
-      "total_days": 1,
-      "streak": 1,
-      "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
-    },
-    {
-      "rank": 13,
+      "rank": 20,
       "address": "0x2ba741bb84869862015ce950d059b6346598e4c4",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 14,
+      "rank": 21,
+      "address": "0x2d8b67e85c48a7db98059ce1daa255a298773ba1",
+      "total_days": 1,
+      "streak": 1,
+      "milestones": [],
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
+    },
+    {
+      "rank": 22,
       "address": "0x3540be133ea4fd88f913e4dc58c87b3125d1733b",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 15,
-      "address": "0x3bdae1fad8aed2348c90cba433b7074145ac75af",
-      "total_days": 1,
-      "streak": 1,
-      "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
-    },
-    {
-      "rank": 16,
+      "rank": 23,
       "address": "0x3f04a4d4042edfd8d9cc6f2c5b6302a65c8c142a",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 17,
+      "rank": 24,
       "address": "0x4042190a2576eabaa3a2afd9792ef25de8e838ad",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 18,
+      "rank": 25,
       "address": "0x41746deedaf8a63aa5925e7519a9d0b2cbe79d1a",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 19,
+      "rank": 26,
       "address": "0x41f50d29a62cad1330759d0923f8ba20ecc242a1",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 20,
-      "address": "0x44ec61683c09afb6cf3a837c09eb530f6205b0eb",
-      "total_days": 1,
-      "streak": 1,
-      "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
-    },
-    {
-      "rank": 21,
+      "rank": 27,
       "address": "0x46cb9293569d6bdcd123611f6f6c61b855ab7f19",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 22,
+      "rank": 28,
       "address": "0x4ef88335a30c10d29ea96ecb43bb3c0528476cac",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 23,
+      "rank": 29,
       "address": "0x5447e8b4b24dd9f2283f2dd07ad4e9bf8f4de87d",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 24,
+      "rank": 30,
       "address": "0x5b736032dcda04e6be9ad7c347e9210100b7dfc3",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 25,
+      "rank": 31,
       "address": "0x5c5d73a6090c5b815c137d3f862822f36713aa1c",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 26,
+      "rank": 32,
       "address": "0x618cfac1b7251ae5494eb5d8cdc1ca10ea5e508e",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 27,
+      "rank": 33,
       "address": "0x85bb1024ea69d56d5485471e8c2cf8eac25a1fe9",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 28,
-      "address": "0x89d67677cdf415cafaff521c905b45418f563308",
-      "total_days": 1,
-      "streak": 1,
-      "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
-    },
-    {
-      "rank": 29,
+      "rank": 34,
       "address": "0x8a8d750491958d8e8326f82ecfab147d532f4ad6",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 30,
+      "rank": 35,
       "address": "0x8ac287270cfbbe6766bc13415d06c35b8e9b5b29",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 31,
+      "rank": 36,
       "address": "0x8cdb6388598fc32ef463a25311e5a489913e6ee5",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 32,
+      "rank": 37,
       "address": "0x8f042550484860e6944e35772800187f09104eb0",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 33,
+      "rank": 38,
       "address": "0xa6c413a8f29eb5f8d34e521fed44234732e87f4b",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 34,
-      "address": "0xa938fe1e3b4555b2b48d9c90758e7cb575e6aa07",
-      "total_days": 1,
-      "streak": 1,
-      "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
-    },
-    {
-      "rank": 35,
+      "rank": 39,
       "address": "0xab7d36aed6e987158e7cbc50ca5b5b9cf1e79b41",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 36,
-      "address": "0xaea7be9280fa282b7590987a2131f019d736bc0a",
-      "total_days": 1,
-      "streak": 1,
-      "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
-    },
-    {
-      "rank": 37,
+      "rank": 40,
       "address": "0xaeaf01a63b19616e70698bedc1a5797f1678071f",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 38,
+      "rank": 41,
       "address": "0xb5c9227b65baeae14fe5b36bd5aa8008ec208d5a",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 39,
+      "rank": 42,
       "address": "0xb74882235769730cd1b79b933840715ff4e8ccde",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 40,
+      "rank": 43,
       "address": "0xb75c888715253b681fb33fb1f31a8c9b9e8829a9",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 41,
+      "rank": 44,
       "address": "0xb8bc4a4274b24826c0dcd846f33c92ec08e6c990",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 42,
+      "rank": 45,
       "address": "0xc22883289b838c01711bf7342156dfafd83e2281",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 43,
+      "rank": 46,
       "address": "0xc44c2126275e3f2098b8fc44dc55d29800364d92",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 44,
+      "rank": 47,
       "address": "0xc725c4a52032780ed7b751f37db2b72f0f30abc2",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 45,
+      "rank": 48,
       "address": "0xcafdeb6f74ceb456f18cd288c4a310f3e889a89e",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 46,
+      "rank": 49,
       "address": "0xcc0a4b5b5b15a9b823dbf1cc5daba2bd29d61808",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 47,
+      "rank": 50,
       "address": "0xcc64fd7badf9e9f83ee301bdfb802f32705cd760",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 48,
+      "rank": 51,
       "address": "0xccfaa6a7dbc37957c262bbf262765d2283d1c3b3",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 49,
-      "address": "0xd29d742c187c03da5f5fc885534e6ac07efb1ba8",
+      "rank": 52,
+      "address": "0xcdf123d3f958b760ac4f0310560df2343c3346e6",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 50,
+      "rank": 53,
       "address": "0xd2be0ad70b754bc765406744aeac994bcc4ce5df",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 51,
+      "rank": 54,
       "address": "0xdb6ae2e179f9a393eb968287c8558e0efdd3b175",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 52,
+      "rank": 55,
       "address": "0xe4e5affc34f5da2c040f04711c0dd29e869d853f",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 53,
-      "address": "0xe5c5d6aaeb7201913341462501fb3571ee887071",
-      "total_days": 1,
-      "streak": 1,
-      "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
-    },
-    {
-      "rank": 54,
+      "rank": 56,
       "address": "0xea1d940442a1b248f64ad4461f0cd3ce4a0d71d0",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 55,
+      "rank": 57,
       "address": "0xf04a01080465815ed4f609cb46c17a84c3f358ef",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     },
     {
-      "rank": 56,
+      "rank": 58,
       "address": "0xf8d419991b59111bbc71d00c0f3889f495264fc8",
       "total_days": 1,
       "streak": 1,
       "milestones": [],
-      "est_kong": 51724.14,
-      "share_pct": 1.7241
+      "est_kong": 42857.14,
+      "share_pct": 1.4286
     }
   ],
   "discovery": {
     "method": "holder-superset scan (AgentQuest holders) + live totalCheckins reads",
-    "holders_scanned": 412,
+    "holders_scanned": 415,
     "holder_refresh": {
-      "state_next_token_id": 869,
-      "live_next_token_id": 871,
-      "refreshed_token_ids": 2,
+      "state_next_token_id": 875,
+      "live_next_token_id": 876,
+      "refreshed_token_ids": 1,
       "failed_ownerof": []
     },
     "unreadable_holders": []
