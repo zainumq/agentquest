@@ -13,7 +13,7 @@
   input { width: 100%; box-sizing: border-box; padding: 10px; margin: 4px 0 12px; border-radius: 8px; border: 1px solid #33415e; background: #16224d; color: #fff; font-size: 14px; }
   button { padding: 12px 20px; border: 0; border-radius: 8px; font-size: 15px; cursor: pointer; margin-right: 8px; }
   #grindBtn { background: #f5c542; color: #0a1128; font-weight: bold; }
-  #stopBtn { background: #33415e; color: #fff; }
+  #stopBtn, #refreshBtn { background: #33415e; color: #fff; }
   button:disabled { opacity: .5; cursor: default; }
   .box { background: #16224d; border: 1px solid #33415e; border-radius: 10px; padding: 14px; margin-top: 14px; }
   .row { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; padding: 3px 0; }
@@ -25,7 +25,7 @@
 </head>
 <body>
 <h1>⛏️ Quest Sparks — PoW Miner</h1>
-<p>Sebelum mint, cari <b>nonce</b> yang memenuhi proof-of-work: <code>keccak256(abi.encodePacked(alamat wallet kamu, nonce))</code> harus punya <b id="diffLabel">20</b> bit nol di depan. Difficulty naik otomatis +1 tiap 333 mint (maks 26) — halaman ini membaca difficulty saat ini langsung dari kontrak. Nonce terikat ke alamat wallet — tidak bisa dicuri orang lain, dan hanya bisa dipakai sekali.</p>
+<p>Sebelum mint, cari <b>nonce</b> yang memenuhi proof-of-work: <code>keccak256(abi.encodePacked(alamat wallet kamu, nonce))</code> harus punya <b id="diffLabel">20</b> bit nol di depan. Difficulty naik otomatis +1 tiap 333 mint (maks 26) — halaman ini membaca difficulty saat ini langsung dari kontrak, dan membacanya ulang setiap kali kamu grind. Nonce terikat ke alamat wallet — tidak bisa dicuri orang lain, dan hanya bisa dipakai sekali.</p>
 
 <label for="addr">Alamat wallet kamu (0x…)</label>
 <input id="addr" type="text" placeholder="0x..." spellcheck="false">
@@ -37,6 +37,7 @@
 
 <button id="grindBtn">Mulai Grind</button>
 <button id="stopBtn" disabled>Stop</button>
+<button id="refreshBtn">🔄 Refresh Difficulty</button>
 
 <div class="box" id="progress">
   <div class="row"><span>Status</span><b id="status">Siap.</b></div>
@@ -54,7 +55,7 @@
   <div class="row"><span>Hash</span><code id="hashOut">—</code></div>
   <div class="row"><span>Waktu grind</span><b id="timeOut">—</b></div>
   <p><button id="copyBtn">Salin Nonce</button></p>
-  <p class="note">Pakai nonce ini di fungsi <code>mintFree</code> / <code>mintPaid</code> bersama kode <code>streak-badge-spark</code>. Satu nonce hanya berlaku untuk satu mint dari wallet ini.</p>
+  <p class="note">Pakai nonce ini di fungsi <code>mintFree</code> / <code>mintPaid</code> bersama kode <code>streak-badge-spark</code>. Satu nonce hanya berlaku untuk satu mint dari wallet ini. Nonce ini dicek pada <b id="verifiedAt">—</b> di difficulty <b id="verifiedDiff">—</b> bit. Tapi jendela kecil tetap ada: bila ada mint lain yang melewati batas 333 setelah pengecekan ini dan sebelum transaksimu mendarat, nonce bisa basi — bila mint revert, grind ulang di difficulty baru.</p>
 </div>
 
 <p class="note">Miner berjalan sepenuhnya di browser kamu — tidak ada server, tidak ada data yang dikirim ke mana pun. Perkiraan kasar di laptop biasa: 20 bit ≈ 10–20 detik (makin banyak mint, makin susah — maks 26 bit). Kontrak Quest Sparks (BSC mainnet): <code id="contractAddr">0x20ef401acddb836e3576aade51f620f6a99631cb</code>.</p>
@@ -115,36 +116,68 @@ if (typeof document !== "undefined") {
   const $ = (id) => document.getElementById(id);
   let stopFlag = false;
 
+  /* The user can override the difficulty by hand; once they do, automatic
+     reads stop overwriting their value until they hit Refresh. */
+  let diffManual = false;
+  $("diff").addEventListener("input", () => { diffManual = true; });
+
+  async function readDifficultyFromContract() {
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
+    const sparks = new ethers.Contract(
+      CONTRACT_ADDRESS,
+      ["function difficultyBits() view returns (uint8)"],
+      provider
+    );
+    return Number(await sparks.difficultyBits());
+  }
+
   /* Read the CURRENT effective difficulty from the contract (auto-tiered:
-     base 20, +1 per 333 mints, cap 26). Falls back to the manual input. */
+     base 20, +1 per 333 mints, cap 26). Falls back to the manual input.
+     Returns the difficulty, or null when it could not be read. */
   async function loadDifficultyFromContract() {
     if (CONTRACT_ADDRESS === "0x0000000000000000000000000000000000000000") {
       $("diffSrc").textContent = "Kontrak mainnet belum ter-deploy — difficulty manual di atas (" + DIFFICULTY_FALLBACK + " bit, base luncur).";
-      return;
+      return null;
     }
     try {
-      const provider = new ethers.JsonRpcProvider(RPC_URL);
-      const sparks = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        ["function difficultyBits() view returns (uint8)"],
-        provider
-      );
-      const d = Number(await sparks.difficultyBits());
-      $("diff").value = d;
+      const d = await readDifficultyFromContract();
+      if (!diffManual) { $("diff").value = d; }
       $("diffLabel").textContent = d;
       $("diffSrc").textContent = "Difficulty saat ini dari kontrak: " + d + " bit (naik +1 tiap 333 mint, maks 26).";
       $("contractAddr").textContent = CONTRACT_ADDRESS;
+      return d;
     } catch (e) {
       $("diffSrc").textContent = "Tidak bisa membaca difficulty dari kontrak — pakai nilai manual di atas (" + DIFFICULTY_FALLBACK + " bit).";
+      return null;
     }
   }
   loadDifficultyFromContract();
 
+  /* Keep the displayed difficulty fresh while the page is open: re-read every
+     60 seconds and whenever the tab regains focus. Never overwrites a manual
+     value, and never disturbs a grind in progress (grind uses its own copy). */
+  setInterval(() => { loadDifficultyFromContract(); }, 60000);
+  window.addEventListener("focus", () => { loadDifficultyFromContract(); });
+
+  $("refreshBtn").addEventListener("click", async () => {
+    diffManual = false;
+    $("status").textContent = "Membaca difficulty terbaru dari kontrak…";
+    const d = await loadDifficultyFromContract();
+    if (d !== null) { $("status").textContent = "Difficulty terbaru: " + d + " bit."; }
+  });
+
   $("grindBtn").addEventListener("click", async () => {
     const addr = $("addr").value.trim();
-    const difficulty = parseInt($("diff").value, 10);
-    const start = $("start").value.trim() || "0";
     if (!ethers.isAddress(addr)) { $("status").textContent = "Alamat wallet tidak valid."; return; }
+    /* Re-read the difficulty from the contract right before grinding, so a
+       tier boundary crossed since page load doesn't waste the grind. */
+    if (!diffManual) {
+      $("status").textContent = "Membaca difficulty terbaru dari kontrak…";
+      const fresh = await loadDifficultyFromContract();
+      if (fresh !== null) { $("diff").value = fresh; }
+    }
+    let difficulty = parseInt($("diff").value, 10);
+    const start = $("start").value.trim() || "0";
     if (isNaN(difficulty) || difficulty < 0 || difficulty > 64) { $("status").textContent = "Difficulty harus 0–64."; return; }
     $("diffLabel").textContent = difficulty;
     $("result").style.display = "none";
@@ -153,11 +186,25 @@ if (typeof document !== "undefined") {
     stopFlag = false;
     $("status").textContent = "Grinding…";
     const t0 = Date.now();
-    const res = await grind(addr, difficulty, start, (tried, ms) => {
-      $("tried").textContent = tried.toLocaleString("id-ID");
-      $("rate").textContent = Math.round(tried / (ms / 1000)).toLocaleString("id-ID") + " hash/dtk";
-      $("elapsed").textContent = (ms / 1000).toFixed(1) + " dtk";
-    }, () => stopFlag);
+    let res = null;
+    /* If another mint crosses a 333-token boundary while we grind, the nonce
+       we just found is useless at the new difficulty — re-read and re-grind
+       automatically, up to 3 attempts. */
+    for (let attempt = 0; attempt < 3; attempt++) {
+      res = await grind(addr, difficulty, start, (tried, ms) => {
+        $("tried").textContent = tried.toLocaleString("id-ID");
+        $("rate").textContent = Math.round(tried / (ms / 1000)).toLocaleString("id-ID") + " hash/dtk";
+        $("elapsed").textContent = (ms / 1000).toFixed(1) + " dtk";
+      }, () => stopFlag);
+      if (!res) break; // stopped by the user
+      const fresh = diffManual ? null : await loadDifficultyFromContract();
+      if (fresh === null || fresh === difficulty) break;
+      difficulty = fresh;
+      $("diff").value = difficulty;
+      $("diffLabel").textContent = difficulty;
+      $("status").textContent = "Difficulty naik ke " + difficulty + " bit saat grinding — grind ulang otomatis…";
+      $("result").style.display = "none";
+    }
     $("grindBtn").disabled = false;
     $("stopBtn").disabled = true;
     if (!res) { $("status").textContent = "Dihentikan."; return; }
@@ -166,6 +213,8 @@ if (typeof document !== "undefined") {
     $("nonceHex").textContent = "0x" + BigInt(res.nonce).toString(16).padStart(64, "0");
     $("hashOut").textContent = res.hash;
     $("timeOut").textContent = (res.ms / 1000).toFixed(1) + " dtk (" + res.tried.toLocaleString("id-ID") + " percobaan)";
+    $("verifiedAt").textContent = new Date().toLocaleTimeString("id-ID", { hour12: false });
+    $("verifiedDiff").textContent = difficulty;
     $("result").style.display = "block";
   });
   $("stopBtn").addEventListener("click", () => { stopFlag = true; });
