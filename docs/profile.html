@@ -252,7 +252,7 @@ is ever sent from this page.</p>
   <p style="margin:12px 0 4px"><b>Verified Skills</b></p>
   <div id="skillsList"></div>
   <p class="note" style="margin-top:12px">Skills are proven by work, not self-selected.</p>
-  <p class="note">A skill becomes Verified when on-chain evidence exists &mdash; completed tagged quests, partner attestations, or deployed verified contracts linked to this wallet.</p>
+  <p class="note">A skill becomes Verified when on-chain evidence exists &mdash; completed tagged quests, partner attestations, or deployed verified contracts linked to this wallet. Holding a transferred Quest Sparks without a badge is Evidence-backed, not Verified.</p>
   <p class="err" id="skillsErr" hidden></p>
 </div>
 
@@ -661,9 +661,11 @@ async function badgeArtwork(tokenId) {
 /* Skills & Capabilities — v1 catalog. HARD RULE: a capability tag is shown
    ONLY for a skill whose status is Verified, and a skill is Verified ONLY
    when on-chain evidence exists. Nothing is marked Verified by hand.
-   - Quest Completion: Verified iff badges >= 1 OR totalCheckins >= 1 OR
-     Quest Sparks >= 1, from the reads this page already makes. The evidence
-     line quotes the live numbers.
+   - Quest Completion: Verified iff badges >= 1. A badge is soulbound proof
+     of a completed quest. A check-in alone cannot exist without a badge
+     (Streak.checkIn reverts for non-holders), and a transferred Sparks
+     alone proves collection, not quest completion — so Sparks-only is
+     Evidence-backed, never Verified.
    - Blockchain Research: Unverified in v1 — no on-chain proof is linked to
      this wallet yet. Verifiable later via a tagged Platform Quest campaign
      or a partner attestation.
@@ -679,10 +681,13 @@ function renderSkills(d) {
   const c = d.totalCheckins;
   const s = d.sparks === null ? null : d.sparks.length;
   const anyRead = b !== null || c !== null || s !== null;
-  const proven = (b !== null && b >= 1) || (c !== null && c >= 1) || (s !== null && s >= 1);
+  const hasBadge = b !== null && b >= 1;
+  // Sparks-only (e.g. a transferred Sparks with no badge) is evidence of
+  // holding, not of completing a quest — Evidence-backed, never Verified.
+  const sparksOnly = !hasBadge && s !== null && s >= 1;
 
   let questStatus, questPill, questEvidence;
-  if (proven) {
+  if (hasBadge) {
     questStatus = "Verified"; questPill = "pill-ok";
     const parts = [];
     if (b !== null) parts.push(b + " badge" + (b === 1 ? "" : "s"));
@@ -692,6 +697,9 @@ function renderSkills(d) {
   } else if (!anyRead) {
     questStatus = "Could not verify"; questPill = "pill-muted";
     questEvidence = "Quest activity could not be read — RPC unavailable, try again.";
+  } else if (sparksOnly) {
+    questStatus = "Evidence-backed"; questPill = "pill-chain";
+    questEvidence = "Holds " + s + " Quest Spark" + (s === 1 ? "" : "s") + " but no badge yet — collection evidence, not quest completion.";
   } else {
     questStatus = "Unverified"; questPill = "pill-warn";
     questEvidence = "No badges, check-ins, or Quest Sparks on-chain yet.";

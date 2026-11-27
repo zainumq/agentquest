@@ -1,11 +1,12 @@
 {
   "wallet": "0x0a90f878e4cf3ef3bc0ee4a67e2ff0166986ad5f",
-  "generatedAt": "2026-11-27 16:07 WIB",
+  "generatedAt": "2026-11-27 19:02 WIB",
   "total": 337,
   "liveScore": 337,
   "entries": [
     {
       "date": null,
+      "eventId": "agentid-held",
       "activity": "Agent ID acquired (first held)",
       "points": 100,
       "source": "Live read \u2014 Agent ID held (balanceOf + handleOf). Acquisition date unverified; first held between 2026-10-16 and 2026-10-28.",
@@ -15,6 +16,7 @@
     },
     {
       "date": "2026-11-18",
+      "eventId": "badge-13",
       "activity": "Collector II badge #13 minted",
       "points": 50,
       "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
@@ -24,6 +26,7 @@
     },
     {
       "date": "2026-11-18",
+      "eventId": "badge-23",
       "activity": "Agent ID Holder badge #23 minted",
       "points": 50,
       "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
@@ -33,6 +36,7 @@
     },
     {
       "date": "2026-11-18",
+      "eventId": "badge-24",
       "activity": "Collector I badge #24 minted",
       "points": 50,
       "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
@@ -42,6 +46,7 @@
     },
     {
       "date": "2026-11-18",
+      "eventId": "badge-25",
       "activity": "Collector III badge #25 minted",
       "points": 50,
       "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
@@ -51,6 +56,7 @@
     },
     {
       "date": "2026-11-26",
+      "eventId": "sparks-1",
       "activity": "Quest Sparks #1 minted (collection \u2014 +10 flat for holding \u22651)",
       "points": 10,
       "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
@@ -60,6 +66,7 @@
     },
     {
       "date": "2026-11-27",
+      "eventId": "streak-live",
       "activity": "Current streak (live): 9 days",
       "points": 27,
       "source": "Live read \u2014 streak contract (updates daily)",
