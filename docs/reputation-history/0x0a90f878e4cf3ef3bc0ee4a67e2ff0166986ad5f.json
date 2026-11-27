@@ -1,8 +1,8 @@
 {
   "wallet": "0x0a90f878e4cf3ef3bc0ee4a67e2ff0166986ad5f",
-  "generatedAt": "2026-11-27 10:12 WIB",
-  "total": 375,
-  "liveScore": 375,
+  "generatedAt": "2026-11-27 16:07 WIB",
+  "total": 337,
+  "liveScore": 337,
   "entries": [
     {
       "date": null,
@@ -50,94 +50,13 @@
       "verified": true
     },
     {
-      "date": "2026-11-19",
-      "activity": "Daily check-in",
-      "points": 2,
-      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
-      "txHash": null,
-      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
-      "verified": "derived"
-    },
-    {
-      "date": "2026-11-20",
-      "activity": "Daily check-in",
-      "points": 2,
-      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
-      "txHash": null,
-      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
-      "verified": "derived"
-    },
-    {
-      "date": "2026-11-21",
-      "activity": "Daily check-in",
-      "points": 2,
-      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
-      "txHash": null,
-      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
-      "verified": "derived"
-    },
-    {
-      "date": "2026-11-22",
-      "activity": "Daily check-in",
-      "points": 2,
-      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
-      "txHash": null,
-      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
-      "verified": "derived"
-    },
-    {
-      "date": "2026-11-23",
-      "activity": "Daily check-in",
-      "points": 2,
-      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
-      "txHash": null,
-      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
-      "verified": "derived"
-    },
-    {
-      "date": "2026-11-24",
-      "activity": "Daily check-in",
-      "points": 2,
-      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
-      "txHash": null,
-      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
-      "verified": "derived"
-    },
-    {
-      "date": "2026-11-25",
-      "activity": "Daily check-in",
-      "points": 2,
-      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
-      "txHash": null,
-      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
-      "verified": "derived"
-    },
-    {
       "date": "2026-11-26",
-      "activity": "Quest Sparks #1 minted",
-      "points": 30,
+      "activity": "Quest Sparks #1 minted (collection \u2014 +10 flat for holding \u22651)",
+      "points": 10,
       "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
       "txHash": "0x3b3f94e7e80e36716490ef7853f3913e64a7a687e8516efcdd53f0c734eccf45",
       "bscscanUrl": "https://bscscan.com/tx/0x3b3f94e7e80e36716490ef7853f3913e64a7a687e8516efcdd53f0c734eccf45",
       "verified": true
-    },
-    {
-      "date": "2026-11-26",
-      "activity": "Daily check-in",
-      "points": 2,
-      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
-      "txHash": null,
-      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
-      "verified": "derived"
-    },
-    {
-      "date": "2026-11-27",
-      "activity": "Daily check-in",
-      "points": 2,
-      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
-      "txHash": null,
-      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
-      "verified": "derived"
     },
     {
       "date": "2026-11-27",

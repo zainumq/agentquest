@@ -203,14 +203,14 @@ is ever sent from this page.</p>
   <div class="av-pick">
     <h2>Choose Your Avatar</h2>
     <div class="av-grid" id="avatarGrid"></div>
-    <p class="note">Pick an avatar &mdash; change it anytime, as often as you like. Your latest pick is saved in this browser, and the one shown to everyone.</p>
+    <p class="note">Pick an avatar &mdash; change it anytime, as often as you like. Your pick is saved in this browser only. The avatar shown to everyone is the one set for this wallet in the site&rsquo;s registry.</p>
   </div>
   <div class="rep">
-    <p style="margin:4px 0 0"><b>AgentQuest Reputation Score (v1)</b> &mdash; our own
+    <p style="margin:4px 0 0"><b>AgentQuest Reputation Score (v2.1)</b> &mdash; our own
     score, not a Binance score. Max 1,000.</p>
     <div id="scoreBreakdown" style="margin-top:8px"></div>
-    <p class="note" style="margin-top:10px"><b>How it&rsquo;s calculated:</b> Agent ID 100 &middot; Badges 50 each (max 200) &middot; Quest Contributions 30 per Sparks (max 150) + 30 per campaign completion (max 150) &middot; Consistency 3 per streak day (max 90) + 2 per check-in (max 60) &middot; Partner Endorsement and Community 0 &mdash; coming soon. Levels: Bronze 0&ndash;249 &middot; Silver 250&ndash;499 &middot; Gold 500&ndash;749 &middot; Platinum 750&ndash;999 &middot; Diamond 1,000.</p>
-    <p class="note" style="margin-top:6px">The campaign half of Quest Contributions (150 of 300 pts) is empty for everyone right now &mdash; campaigns launch Dec 2026. That&rsquo;s where most future points come from.</p>
+    <p class="note" style="margin-top:10px"><b>How it&rsquo;s calculated:</b> Agent ID 100 &middot; Badges 50 each (max 200) &middot; Campaigns 30 per completed campaign (max 300) &middot; Consistency 3 per streak day (max 90) &middot; Partner Endorsement 20 per attestation received via AgentVouch (max 200) &middot; Community Contributions 25 per verified contribution (max 100) &middot; Quest Sparks 10 flat for holding &ge;1 (extras add 0). Quest Sparks are a transferable collection &mdash; the 10 points come from ownership, so they could be bought if a secondary market appears (none exists yet). Levels: Bronze 0&ndash;249 &middot; Silver 250&ndash;499 &middot; Gold 500&ndash;749 &middot; Platinum 750&ndash;999 &middot; Diamond 1,000.</p>
+    <p class="note" style="margin-top:6px">The 300 pts of Campaigns is empty for everyone right now &mdash; campaigns launch Dec 2026. That&rsquo;s where most future points come from.</p>
   </div>
 </div>
 
@@ -237,6 +237,7 @@ is ever sent from this page.</p>
   <div class="row"><span>Checked in today</span><b id="todayOut">&mdash;</b></div>
   <div class="row"><span>Quest Sparks held</span><b id="sparksOut">&mdash;</b></div>
   <div class="row"><span>Sparks token IDs</span><b id="sparksIds">&mdash;</b></div>
+  <p class="note" style="margin-top:8px">Quest Sparks are a transferable collection &mdash; holding one is an achievement and an allowlist for the next AgentQuest drop. Holding &ge;1 adds a flat 10 points to the Reputation Score (v2.1); holding more adds 0. The points come from ownership, so they could be bought on a secondary market if one appears (none exists yet).</p>
   <div id="activityWrap" hidden>
     <p style="margin:12px 0 4px"><b>Activity</b></p>
     <div id="activityList"></div>
@@ -499,31 +500,37 @@ async function copyText(text) {
   }
 }
 
-/* Reputation Score — 1,000 points across 6 buckets. Campaigns, partner
-   attestations and contribution tracking do not exist yet, so those buckets
-   are honest zeros, shown — never hidden or faked. Returns null when any
-   input read failed. */
+/* Reputation Score v2.1 — 1,000 points across 7 buckets.
+   v2.1 (27 Nov 2026): Quest Sparks add a FLAT +10 when holding >= 1
+   (extras add 0 — no whale stacking). The 10 pts come from ownership of
+   a transferable token, so they could be bought if a secondary market
+   appears (none exists yet); the weight is capped at 1% of the score.
+   Consistency funds those 10 pts: min(streak,30)x3 (max 90), still
+   streak-only — scoring totalCheckins too double-counted the same
+   action. Campaigns (30 x 10), partner attestations (20 per AgentVouch
+   attestation received, max 10) and verified contributions (25 x 4)
+   are honest zeros until their mechanisms exist.
+   Returns null when any input read failed. */
 function scoreBuckets(d) {
   if (d.agentIdBalance === null || d.badges === null || d.sparks === null ||
       d.streak === null || d.totalCheckins === null) return null;
-  const sparksPts = Math.min(d.sparks.length * 30, 150);
   const streakPts = Math.min(d.streak, 30) * 3;
-  const checkinPts = Math.min(d.totalCheckins, 30) * 2;
+  const sparksPts = d.sparks.length >= 1 ? 10 : 0;
   return [
     { name: "Verified Agent ID", pts: d.agentIdBalance > 0 ? 100 : 0, max: 100,
       detail: d.agentIdBalance > 0 ? "Agent ID held" : "No Agent ID held" },
     { name: "Achievement Badges", pts: Math.min(d.badges.length * 50, 200), max: 200,
       detail: d.badges.length + " badge" + (d.badges.length === 1 ? "" : "s") + " × 50" },
-    { name: "Quest Contributions", pts: sparksPts, max: 300,
-      detail: "Quest Sparks " + d.sparks.length + " × 30 = " + sparksPts +
-        " · Campaigns 0 · campaigns launch Dec 2026" },
-    { name: "Consistency", pts: streakPts + checkinPts, max: 150,
-      detail: "streak " + Math.min(d.streak, 30) + " × 3 = " + streakPts +
-        " + check-ins " + Math.min(d.totalCheckins, 30) + " × 2 = " + checkinPts },
-    { name: "Partner Endorsement", pts: 0, max: 150,
-      detail: "Coming soon · partner attestations not live yet" },
+    { name: "Campaigns", pts: 0, max: 300,
+      detail: "Campaigns 0 · campaigns launch Dec 2026" },
+    { name: "Quest Sparks", pts: sparksPts, max: 10,
+      detail: "holding ≥1 Sparks · extras add 0 · transferable collection, points come from ownership" },
+    { name: "Consistency", pts: streakPts, max: 90,
+      detail: "streak " + Math.min(d.streak, 30) + " × 3 = " + streakPts + " (max 30 days counted)" },
+    { name: "Partner Endorsement", pts: 0, max: 200,
+      detail: "Not yet wired · 20 per attestation received via AgentVouch (max 10)" },
     { name: "Community Contributions", pts: 0, max: 100,
-      detail: "Coming soon · contribution tracking not live yet" },
+      detail: "Coming soon · 25 per verified contribution (max 4) · verification path not live yet" },
   ];
 }
 
@@ -789,7 +796,7 @@ function render(d) {
     const nt = NEXT_TIERS.find((t) => total < t.at);
     $("levelNext").textContent = nt
       ? (nt.at - total) + " points to " + nt.name +
-        " — check-in +2/day · streak +3/day · badge +50 · Sparks +30 · campaign +30"
+        " — streak +3/day · badge +50 · campaign +30 · attestation +20 · Sparks +10"
       : "Diamond reached — the top level";
     $("scoreBreakdown").innerHTML = buckets.map((b) =>
       '<div class="row bucket"><span>' + b.name +

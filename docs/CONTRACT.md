@@ -148,17 +148,16 @@ duplicate check) — intentional one-time validation over a bounded 30-item list
 ## Gas (measured with mocks; mainnet may vary ±10–20%)
 
 From `forge test --gas-report` + a local anvil deployment run. Costs at BSC
-gas price ~0.1 gwei (recent mainnet txs used 0.1–0.128 gwei); BNB ≈ $570 ≈
-Rp10,4 jt (rate assumption: 0.005 BNB ≈ $2.85, $1 ≈ Rp18.240).
+gas price ~0.1 gwei (recent mainnet txs used 0.1–0.128 gwei); BNB ≈ $570 (rate assumption: 0.005 BNB ≈ $2.85).
 
-| Operation | Gas | ≈ BNB @0.1 gwei | ≈ IDR |
+| Operation | Gas | ≈ BNB @0.1 gwei | ≈ USD |
 |---|---:|---:|---:|
-| Deploy (10,375 bytes) | 2,677,314 | 0.000268 | ~Rp2.800 |
-| `claim` quest 0 (est.) | ~100,000 | 0.000010 | ~Rp100 |
-| `claim` Collector I (est.) | ~120,000 | 0.000012 | ~Rp125 |
-| `claim` Collector II (est.) | ~170,000 | 0.000017 | ~Rp175 |
-| `claim` Collector III (measured max) | 326,164 | 0.000033 | ~Rp340 |
-| `claimAll` all 4 badges (measured max) | 509,025 | 0.000051 | ~Rp530 |
+| Deploy (10,375 bytes) | 2,677,314 | 0.000268 | ~$0.153 |
+| `claim` quest 0 (est.) | ~100,000 | 0.000010 | ~$0.006 |
+| `claim` Collector I (est.) | ~120,000 | 0.000012 | ~$0.007 |
+| `claim` Collector II (est.) | ~170,000 | 0.000017 | ~$0.010 |
+| `claim` Collector III (measured max) | 326,164 | 0.000033 | ~$0.019 |
+| `claimAll` all 4 badges (measured max) | 509,025 | 0.000051 | ~$0.029 |
 | `claim` range across tests | 21,236–326,164 (avg 138,617) | | |
 | `heldCount` / `isEligible` / `tokenURI` | views (free off-chain) | | |
 
