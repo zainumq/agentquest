@@ -198,8 +198,19 @@ export const CURATED = [
   { name: "Jalopix", address: "0x04f3E2A5c4883c67F732Dff38DCA137F41122C62", minted: 3134 },
 ];
 
+// Multicall3 (canonical, chain-agnostic deployment) — used to batch the
+// ownerOf(1..N) scan into one aggregate3 call per 200-token chunk, so the
+// scan stays fast even as total supply grows. Same pattern as profile.html.
+export const MULTICALL3_ADDRESS = "0xcA11bde05977b3631167028862bE2a173976CA11";
+export const MULTICALL_ABI = [
+  "function aggregate3((address target, bool allowFailure, bytes callData)[] calls) view returns ((bool success, bytes returnData)[])",
+];
+
 // The contract has no token enumeration (no tokenOfOwnerByIndex), so the
 // frontend finds a wallet's badge tokenIds by scanning ownerOf(1..N).
 // This cap bounds that scan; beyond it, owned badges are still shown from
 // per-quest claimed status, but without their on-chain tokenId/SVG.
-export const TOKEN_SCAN_CAP = 1000;
+// (Raised 1000 -> 5000 on 27 Nov 2026: total badges passed 1,000, and the
+// batched Multicall3 scan makes a 5,000-token scan cheap — the old
+// sequential ownerOf scan went dead once total exceeded the 1,000 cap.)
+export const TOKEN_SCAN_CAP = 5000;

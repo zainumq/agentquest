@@ -10,10 +10,13 @@ Contract: `AgentQuest Badge` / `AQBADGE`.
 
 ## Status
 
+- ✅ **DEPLOYED to BNB Smart Chain mainnet, 18 Nov 2026 20:56 WIB.**
+- ✅ Contract: [`0x26ad277193ff31bd086a47bf7b1d25a93573c989`](https://bscscan.com/address/0x26ad277193ff31bd086a47bf7b1d25a93573c989) — source verified on [BscScan](https://bscscan.com/address/0x26ad277193ff31bd086a47bf7b1d25a93573c989#code) and [Sourcify](https://sourcify.dev/#/lookup/0x26ad277193ff31bd086a47bf7b1d25a93573c989) (exact match, 18 Nov 2026).
+- ✅ Deploy tx: [`0x6e93e640c613c427143181e18da912683939cec9621b65dbc5031cae54c9e9cf`](https://bscscan.com/tx/0x6e93e640c613c427143181e18da912683939cec9621b65dbc5031cae54c9e9cf) (block 134323139, deployer Account 16 `0xed1A29F81a61029089Ad8D641670baD47bDced3A`, 2,677,314 gas).
+- ✅ Live app: https://zainumq.github.io/agentquest/
+- ✅ 1,088 badges minted / 522 holders (27 Nov 2026, live on-chain read).
 - ✅ Contract written, **31/31 forge tests pass** (incl. 1 fuzz test, 256 runs).
-- ✅ Deploy script validated end-to-end on a local anvil chain (deploy +
-  on-chain state reads verified).
-- ⛔ **NOT deployed to any live network. No BNB spent. No transaction sent.**
+- ✅ Deploy script validated end-to-end on a local anvil chain before the mainnet deploy.
 
 ## Quests (v1)
 
@@ -163,19 +166,28 @@ Per-quest estimates for quests 0–2 are derived from the measured Collector III
 max (25 checks + mint) and the measured per-check cost (~8k gas incl. loop
 overhead); Collector III and `claimAll` maxima are directly measured.
 
-## Deployment (NOT executed)
+## Deployment (executed 18 Nov 2026)
 
-The deploy script is ready at `script/DeployAgentQuest.s.sol` and was validated
-end-to-end on a local anvil chain (deploy succeeded, receipt status 1;
+Deployed to BNB Smart Chain mainnet on **18 Nov 2026 20:56 WIB** with the
+deploy script at `script/DeployAgentQuest.s.sol` (previously validated
+end-to-end on a local anvil chain: deploy succeeded, receipt status 1;
 on-chain reads confirmed name `AgentQuest Badge`, symbol `AQBADGE`, canonical
 Agent ID address, `curatedLength` 30, first/last curated addresses, ERC-5192
 interface support, `QUEST_COUNT` 4).
+
+- **Contract:** `0x26ad277193ff31bd086a47bf7b1d25a93573c989`
+- **Deploy tx:** `0x6e93e640c613c427143181e18da912683939cec9621b65dbc5031cae54c9e9cf` (block 134323139, status 1)
+- **Deployer:** Account 16 `0xed1A29F81a61029089Ad8D641670baD47bDced3A` (gas only — the contract has no owner)
+- **Gas used:** 2,677,314 (matches the gas table below)
+- **Verification:** source verified on BscScan + Sourcify (exact match) on 18 Nov 2026
+
+The deploy was run with (record of the exact commands used):
 
 ```bash
 # Dry run (no broadcast, no spend):
 forge script script/DeployAgentQuest.s.sol --rpc-url https://bsc-dataseed.bnbchain.org
 
-# Real deploy (needs user go-ahead + funded deployer key + BscScan API key):
+# Real deploy (funded deployer key + BscScan API key):
 forge script script/DeployAgentQuest.s.sol \
   --rpc-url https://bsc-dataseed.bnbchain.org \
   --broadcast --private-key $DEPLOYER_PRIVATE_KEY \
@@ -195,21 +207,25 @@ so deployment needs a **separate EOA key** funded with ~0.0003 BNB for gas
 key holds **no power** after deployment — the contract has no owner — its only
 role is paying gas and being recorded as the deployer.
 
-## Decisions needed before mainnet deployment
+## Pre-deployment decisions — all resolved (archived)
 
-1. **Deployer wallet**: which EOA key funds + sends the deployment (~0.0003
-   BNB)? It needs no ongoing role afterwards (no owner in the contract).
-2. **Curated list sign-off**: confirm the 30 contracts above (incl. the
-   HashOre exception and the Agent404 exclusion). The list is immutable after
-   deployment — it cannot be fixed later without redeploying.
-3. **BscScan verification**: needs a BscScan API key for `forge script
-   --verify` (or manual verification via the BscScan web UI). Source
-   verification is a hackathon requirement.
-4. **Frontend**: the contract alone is callable via BscScan, but the Innovation
-   Award requires a live product — a minimal frontend (quest list + claim
-   buttons, checking `isEligible` first) is still to be built.
-5. **Timing**: deploy soon — every day of delay shortens the window to reach
-   the 30-interacting-holder bar before submission closes 9 Dec 2026 15:00 WIB.
+These five decisions were open before deployment; all were answered in
+Nov 2026 and are recorded here for the audit trail only.
+
+1. **Deployer wallet**: Account 16 (`0xed1A29F81a61029089Ad8D641670baD47bDced3A`)
+   funded and sent the deployment (2,677,314 gas). It holds no ongoing role
+   afterwards — the contract has no owner.
+2. **Curated list sign-off**: the 30 contracts above (incl. the HashOre
+   exception and the Agent404 exclusion) were confirmed 18 Nov 2026 and are
+   immutable in the deployed contract — verified on-chain 27 Nov 2026
+   (`curatedLength()` = 30, all 30 addresses match).
+3. **BscScan verification**: source verified on BscScan + Sourcify
+   (exact match) on 18 Nov 2026.
+4. **Frontend**: live at https://zainumq.github.io/agentquest/ since
+   18 Nov 2026 (quest list + claim buttons, eligibility checked first).
+5. **Timing**: deployed 18 Nov 2026 — well before submission closes
+   9 Dec 2026 15:00 WIB, and the 30-interacting-holder bar was passed
+   within a day (169 holders / 420 badges by 19 Nov 06:54 WIB).
 
 ## Commands
 

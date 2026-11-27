@@ -20,7 +20,7 @@ through the user's own wallet, one user-confirmed transaction per claim.
 ## Run locally
 
 ```bash
-cd frontend
+cd docs
 python3 -m http.server 8080
 # open http://localhost:8080
 ```
@@ -28,27 +28,32 @@ python3 -m http.server 8080
 Any static file server works. Opening `index.html` directly with `file://`
 will **not** work — ES modules and the CDN import need `http(s)://`.
 
-## After deploying the contract — the one-line change
+## Deployed contract
 
-In `config.js`, replace the placeholder:
+The contract is **deployed on BNB Chain mainnet since 18 Nov 2026 20:56 WIB**.
+`config.js` already contains the live address:
 
 ```js
-export const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000";
+export const CONTRACT_ADDRESS = "0x26ad277193ff31bd086a47bf7b1d25a93573c989";
 ```
 
-with the deployed contract address. That is the only change needed — quest
-thresholds, colours, the curated list, and the Agent ID address are already
-final and match `src/AgentQuest.sol` / `script/DeployAgentQuest.s.sol`.
+Deploy tx `0x6e93e640c613c427143181e18da912683939cec9621b65dbc5031cae54c9e9cf`
+(block 134323139). Source verified on
+[BscScan](https://bscscan.com/address/0x26ad277193ff31bd086a47bf7b1d25a93573c989#code)
+and
+[Sourcify](https://sourcify.dev/#/lookup/0x26ad277193ff31bd086a47bf7b1d25a93573c989)
+(exact match). No further config change is needed — quest thresholds,
+colours, the curated list, and the Agent ID address are final and match
+`src/AgentQuest.sol` / `script/DeployAgentQuest.s.sol`.
 
-Until that line is filled in, the page runs in "not deployed yet" mode: the
-Agent ID status check works, but quest eligibility and claims stay disabled.
+## Hosting — live on GitHub Pages since 18 Nov 2026
 
-## Hosting options (not deployed — document only)
-
-- **GitHub Pages**: push this `docs/` directory (or the repo with Pages
-  pointed at it). Free, HTTPS by default, no build needed.
-- **Cloudflare Pages**: drag-and-drop the `docs/` folder, or connect the
-  repo with no build command and `docs/` as the output directory.
+- **Live:** https://zainumq.github.io/agentquest/ (repo `zainumq/agentquest`,
+  GitHub Pages serving this `docs/` directory). Free, HTTPS by default, no
+  build needed.
+- **Cloudflare Pages** (alternative, not in use): drag-and-drop the `docs/`
+  folder, or connect the repo with no build command and `docs/` as the
+  output directory.
 - Any static host works — there is no server-side code at all.
 
 ## How it works
@@ -89,8 +94,9 @@ status, and each badge's tokenId is found in this order:
 
 1. `localStorage` cache, recorded from the claim receipt when the badge was
    claimed through this page;
-2. an `ownerOf()` scan over token ids `1..nextTokenId-1`, capped at 1,000
-   tokens (`TOKEN_SCAN_CAP` in `config.js`);
+2. a batched Multicall3 `ownerOf()` scan over token ids `1..nextTokenId-1`,
+   capped at 5,000 tokens (`TOKEN_SCAN_CAP` in `config.js`) — one
+   `aggregate3` call per 200-token chunk, same pattern as `profile.html`;
 3. if neither works, the badge is still shown from `claimed()` status, with a
    locally rendered preview (same SVG layout and colours as the contract)
    instead of the on-chain artwork.
@@ -102,9 +108,10 @@ When the tokenId is known, the artwork comes from the contract itself:
 ### What the contract lacks (frontend workarounds, all documented above)
 
 - **No token enumeration** — worked around with the receipt cache +
-  bounded `ownerOf()` scan. If total badges ever exceed the 1,000-token scan
-  cap, badges claimed outside this page will show without their tokenId/SVG
-  (still listed as owned, from `claimed()` status).
+  bounded Multicall3 `ownerOf()` scan (cap 5,000 tokens). If total badges
+  ever exceed the scan cap, badges claimed outside this page will show
+  without their tokenId/SVG (still listed as owned, from `claimed()`
+  status).
 - **No per-wallet quest list view** — the frontend reads the 4 quests'
   `claimed()` / `isEligible()` individually (8 view calls per refresh; free).
 - **No `totalSupply()` on the Agent ID registry** — the frontend never calls
@@ -117,5 +124,9 @@ When the tokenId is known, the artwork comes from the contract itself:
   confirmed by the user in their own wallet.
 - No approvals are ever requested (`approve`/`setApprovalForAll` revert in
   the contract anyway — badges are soulbound).
-- No token, no price, no promise of returns anywhere in the UI.
+- The AgentQuest badges themselves carry no token, no price, and no promise
+  of returns. The site separately describes the **$KONG sale** (a different
+  project by the same creator, `index.html` $KONG section): badge-holder
+  benefits there — airdrop, buyer bonus, early access — are stated as
+  conditional on the sale graduating, with no price promise for KONG.
 - The contract has no owner, admin, pause, upgrade, or withdraw function.

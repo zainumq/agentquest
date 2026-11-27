@@ -19,6 +19,8 @@ import {
   CHAIN_ID,
   CHAIN_ID_HEX,
   CURATED,
+  MULTICALL3_ADDRESS,
+  MULTICALL_ABI,
   QUESTS,
   RPC_URLS,
   TOKEN_SCAN_CAP,
@@ -981,7 +983,8 @@ async function claimAllQuests() {
 // The contract has no token enumeration, so owned badges are derived from
 // per-quest claimed() status. A badge's tokenId is found in this order:
 //   1. localStorage — recorded from the claim receipt when claimed here;
-//   2. an ownerOf() scan over 1..nextTokenId-1 (capped, see config);
+//   2. a batched Multicall3 ownerOf() scan over 1..nextTokenId-1
+//      (capped at TOKEN_SCAN_CAP, see config);
 //   3. if neither works, the badge is still shown from claimed() status,
 //      with a locally rendered preview instead of the on-chain SVG.
 
@@ -1039,27 +1042,44 @@ async function findOwnedTokenIds(questIds) {
   if (missing.length === 0) return found;
 
   const total = Number(await withReadProvider((p) => readContract(p).nextTokenId())) - 1;
-  if (total <= 0 || total > TOKEN_SCAN_CAP) return found; // scan not feasible
+  if (total <= 0) return found;
+  const cap = Math.min(total, TOKEN_SCAN_CAP);
 
-  // Scan ownerOf() in chunks; stop as soon as every missing quest is found.
-  const CHUNK = 25;
-  for (let start = 1; start <= total && missing.length > 0; start += CHUNK) {
-    const ids = [];
-    for (let i = start; i < Math.min(start + CHUNK, total + 1); i++) ids.push(i);
-    const owners = await withReadProvider((p) => {
-      const c = readContract(p);
-      return Promise.all(ids.map((id) => c.ownerOf(id).catch(() => null)));
+  // Batch ownerOf() through Multicall3 aggregate3: one eth_call per chunk
+  // instead of one call per token. The old sequential scan was capped at
+  // 1,000 and went dead once total supply passed it (1,088 on 27 Nov 2026).
+  // Same pattern as profile.html (SCAN_CHUNK 200, SCAN_CAP 5000).
+  // Stop as soon as every missing quest is found.
+  const iface = new ethers.Interface(["function ownerOf(uint256 tokenId) view returns (address)"]);
+  const CHUNK = 200;
+  for (let start = 1; start <= cap && missing.length > 0; start += CHUNK) {
+    const end = Math.min(start + CHUNK - 1, cap);
+    const calls = [];
+    for (let t = start; t <= end; t++) {
+      calls.push({
+        target: CONTRACT_ADDRESS,
+        allowFailure: true,
+        callData: iface.encodeFunctionData("ownerOf", [t]),
+      });
+    }
+    const results = await withReadProvider((p) => {
+      const mc = new ethers.Contract(MULTICALL3_ADDRESS, MULTICALL_ABI, p);
+      return mc.aggregate3(calls);
     });
-    for (let j = 0; j < ids.length; j++) {
-      if (owners[j] && owners[j].toLowerCase() === account.toLowerCase()) {
-        const questId = Number(
-          await withReadProvider((p) => readContract(p).tokenQuest(ids[j]))
-        );
-        if (missing.includes(questId)) {
-          found[questId] = String(ids[j]);
-          saveTokenId(questId, ids[j]);
-          missing.splice(missing.indexOf(questId), 1);
-        }
+    for (let i = 0; i < results.length; i++) {
+      const r = results[i];
+      // A successful ownerOf returns one 32-byte word (0x + 64 hex chars).
+      if (!r.success || r.returnData.length !== 66) continue;
+      const owner = "0x" + r.returnData.slice(-40);
+      if (owner.toLowerCase() !== account.toLowerCase()) continue;
+      const tokenId = start + i;
+      const questId = Number(
+        await withReadProvider((p) => readContract(p).tokenQuest(tokenId))
+      );
+      if (missing.includes(questId)) {
+        found[questId] = String(tokenId);
+        saveTokenId(questId, tokenId);
+        missing.splice(missing.indexOf(questId), 1);
       }
     }
   }
