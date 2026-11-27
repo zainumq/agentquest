@@ -1,0 +1,156 @@
+{
+  "wallet": "0x0a90f878e4cf3ef3bc0ee4a67e2ff0166986ad5f",
+  "generatedAt": "2026-11-27 10:12 WIB",
+  "total": 375,
+  "liveScore": 375,
+  "entries": [
+    {
+      "date": null,
+      "activity": "Agent ID acquired (first held)",
+      "points": 100,
+      "source": "Live read \u2014 Agent ID held (balanceOf + handleOf). Acquisition date unverified; first held between 2026-10-16 and 2026-10-28.",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0x60b9262456de011f7d15a54cdd8c48baaa8b022f",
+      "verified": false
+    },
+    {
+      "date": "2026-11-18",
+      "activity": "Collector II badge #13 minted",
+      "points": 50,
+      "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
+      "txHash": "0x44847f36611a463a94fdb707b3edfc7f72029a3d80030aec1cf435b1cee6e703",
+      "bscscanUrl": "https://bscscan.com/tx/0x44847f36611a463a94fdb707b3edfc7f72029a3d80030aec1cf435b1cee6e703",
+      "verified": true
+    },
+    {
+      "date": "2026-11-18",
+      "activity": "Agent ID Holder badge #23 minted",
+      "points": 50,
+      "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
+      "txHash": "0xa964df7aa4c805b5763eadf73ea377e4c2d8fd3ab04992dab0b8ac2095a0e507",
+      "bscscanUrl": "https://bscscan.com/tx/0xa964df7aa4c805b5763eadf73ea377e4c2d8fd3ab04992dab0b8ac2095a0e507",
+      "verified": true
+    },
+    {
+      "date": "2026-11-18",
+      "activity": "Collector I badge #24 minted",
+      "points": 50,
+      "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
+      "txHash": "0xa964df7aa4c805b5763eadf73ea377e4c2d8fd3ab04992dab0b8ac2095a0e507",
+      "bscscanUrl": "https://bscscan.com/tx/0xa964df7aa4c805b5763eadf73ea377e4c2d8fd3ab04992dab0b8ac2095a0e507",
+      "verified": true
+    },
+    {
+      "date": "2026-11-18",
+      "activity": "Collector III badge #25 minted",
+      "points": 50,
+      "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
+      "txHash": "0xa964df7aa4c805b5763eadf73ea377e4c2d8fd3ab04992dab0b8ac2095a0e507",
+      "bscscanUrl": "https://bscscan.com/tx/0xa964df7aa4c805b5763eadf73ea377e4c2d8fd3ab04992dab0b8ac2095a0e507",
+      "verified": true
+    },
+    {
+      "date": "2026-11-19",
+      "activity": "Daily check-in",
+      "points": 2,
+      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": "derived"
+    },
+    {
+      "date": "2026-11-20",
+      "activity": "Daily check-in",
+      "points": 2,
+      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": "derived"
+    },
+    {
+      "date": "2026-11-21",
+      "activity": "Daily check-in",
+      "points": 2,
+      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": "derived"
+    },
+    {
+      "date": "2026-11-22",
+      "activity": "Daily check-in",
+      "points": 2,
+      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": "derived"
+    },
+    {
+      "date": "2026-11-23",
+      "activity": "Daily check-in",
+      "points": 2,
+      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": "derived"
+    },
+    {
+      "date": "2026-11-24",
+      "activity": "Daily check-in",
+      "points": 2,
+      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": "derived"
+    },
+    {
+      "date": "2026-11-25",
+      "activity": "Daily check-in",
+      "points": 2,
+      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": "derived"
+    },
+    {
+      "date": "2026-11-26",
+      "activity": "Quest Sparks #1 minted",
+      "points": 30,
+      "source": "Verified mint tx \u2014 receipt + block timestamp (dataseed)",
+      "txHash": "0x3b3f94e7e80e36716490ef7853f3913e64a7a687e8516efcdd53f0c734eccf45",
+      "bscscanUrl": "https://bscscan.com/tx/0x3b3f94e7e80e36716490ef7853f3913e64a7a687e8516efcdd53f0c734eccf45",
+      "verified": true
+    },
+    {
+      "date": "2026-11-26",
+      "activity": "Daily check-in",
+      "points": 2,
+      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": "derived"
+    },
+    {
+      "date": "2026-11-27",
+      "activity": "Daily check-in",
+      "points": 2,
+      "source": "Derived from on-chain lastCheckinDay (day numbers); exact time unknown",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": "derived"
+    },
+    {
+      "date": "2026-11-27",
+      "activity": "Current streak (live): 9 days",
+      "points": 27,
+      "source": "Live read \u2014 streak contract (updates daily)",
+      "txHash": null,
+      "bscscanUrl": "https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb",
+      "verified": true,
+      "live": true
+    }
+  ],
+  "problems": [
+    "Agent ID: acquisition date unverified \u2014 eth_getLogs rate-limited (publicnode HTTP 429) and BscScan free key blocks chain 56; date bounded 2026-10-16..2026-10-28 only"
+  ]
+}

@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AgentQuest Agent Profile — a read-only on-chain profile for any wallet: Agent ID verification, badge collection, quest history, and the AgentQuest Reputation Score.">
+<title>Agent Profile — AgentQuest</title>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a1128;
+    --surface: #141f45;
+    --surface-2: #0f1a3d;
+    --border: #2a3a63;
+    --text: #eef1f8;
+    --muted: #93a5d6;
+    --teal: #2dd4bf;
+    --gold: #f5c542;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); max-width: 780px; margin: 0 auto; padding: 36px 20px 48px; line-height: 1.6; }
+  /* Top nav (v8): same markup + style on profile and discover. */
+  .topnav { display: flex; justify-content: space-between; align-items: center; gap: 8px 18px; flex-wrap: wrap; padding: 2px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .topnav .brand { color: var(--teal); font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none; }
+  .topnav nav { display: flex; gap: 18px; flex-wrap: wrap; }
+  .topnav nav a { color: var(--muted); font-size: 14px; text-decoration: none; }
+  .topnav nav a:hover { color: var(--text); }
+  .topnav nav a.active { color: var(--teal); font-weight: 700; border-bottom: 2px solid var(--teal); padding-bottom: 2px; }
+  .topnav nav a .soon { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gold); border: 1px solid var(--gold); border-radius: 999px; padding: 1px 6px; margin-left: 2px; white-space: nowrap; }
+  .topnav + .demo-banner { margin-top: 0; }
+  h1 { color: var(--text); font-size: 30px; line-height: 1.15; letter-spacing: -0.5px; margin: 0 0 6px; }
+  .tagline { font-size: 16px; font-style: italic; color: var(--muted); margin: 0 0 10px; }
+  h2 { color: var(--text); font-size: 14px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; margin: 0 0 12px; }
+  p, label { font-size: 14px; line-height: 1.6; }
+  a { color: var(--teal); }
+  code, .mono { color: var(--teal); word-break: break-all; font-family: ui-monospace, monospace; font-size: 13px; }
+  input { width: 100%; box-sizing: border-box; padding: 12px 14px; margin: 6px 0 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: #fff; font-size: 14px; }
+  button { padding: 12px 22px; border: 0; border-radius: 10px; font-size: 15px; cursor: pointer; background: var(--teal); color: #052e28; font-weight: bold; }
+  button:disabled { opacity: .5; cursor: default; }
+  .box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px; margin-top: 22px; }
+  .note { color: var(--muted); font-size: 12px; }
+  .err { color: #f87171; font-size: 13px; }
+  .row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; padding: 6px 0; }
+  .row b { color: var(--text); font-weight: 600; }
+  .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: bold; }
+  .pill-ok { background: #14532d; color: #4ade80; }
+  .pill-no { background: #3f1d1d; color: #f87171; }
+  .pill-muted { background: #33415e; color: #e6ebf5; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .stat { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .stat .num { font-size: 24px; font-weight: bold; color: var(--gold); }
+  .stat .lbl { font-size: 12px; color: var(--muted); }
+  .badge-card { background: var(--surface-2); border: 1px solid var(--border); border-left: 4px solid #6366f1; border-radius: 10px; padding: 12px; }
+  .badge-card .tid { font-size: 18px; font-weight: bold; }
+  .badge-card .qname { font-size: 13px; }
+  .badge-card img { width: 100%; border-radius: 6px; margin-bottom: 6px; display: block; }
+  .demo-banner { background: #3b2f00; border: 1px solid var(--gold); color: #fde68a; border-radius: 10px; padding: 12px 16px; font-size: 13px; margin-top: 20px; }
+  /* Hero: agent identity first, per the owner's mockup. */
+  .hero { text-align: center; padding: 30px 24px 24px; position: relative; }
+  .pub-pill { position: absolute; top: 16px; right: 16px; }
+  .pill-chain { background: #1e3a8a; color: #93c5fd; }
+  /* Reputation Level (v9): tier + progress bar under the hero stats. */
+  .level { text-align: left; margin-top: 18px; }
+  .level .lrow { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; }
+  .level .lname { font-weight: bold; }
+  .tier-bronze { color: #d08a4e; }
+  .tier-silver { color: #cbd5e1; }
+  .tier-gold { color: var(--gold); }
+  .tier-platinum { color: #a5b4fc; }
+  .tier-diamond { color: #67e8f9; }
+  .level .lbar { height: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; margin: 8px 0 6px; overflow: hidden; }
+  .level .lfill { height: 100%; background: var(--gold); border-radius: 999px; }
+  .level .lpts { font-size: 13px; color: var(--muted); }
+  .avatar { width: 96px; height: 96px; border-radius: 50%; background: #2f4da8; margin: 8px auto 14px; display: flex; align-items: center; justify-content: center; }
+  .avatar svg { width: 52px; height: 52px; }
+  .display-name { font-size: 28px; font-weight: bold; color: var(--text); letter-spacing: -0.5px; }
+  .handle-line { color: var(--teal); font-size: 14px; margin: 6px 0 10px; }
+  .member-line { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+  .hero-stats { display: flex; justify-content: space-around; margin-top: 22px; }
+  .hstat { flex: 1; }
+  .hstat + .hstat { border-left: 1px solid var(--border); }
+  .hstat .hnum { font-size: 28px; font-weight: bold; }
+  .hstat .hnum.gold { color: var(--gold); }
+  .hstat .hlbl { font-size: 13px; color: var(--text); margin-top: 2px; }
+  .hero-div { border: 0; border-top: 1px solid var(--border); margin: 22px 0 10px; }
+  .hero .row { text-align: left; }
+  .share-btn { width: 100%; margin-top: 16px; background: var(--surface-2); color: var(--text); border: 1px solid var(--border); border-radius: 999px; font-weight: normal; padding: 13px 20px; }
+  .share-btn:hover { border-color: var(--teal); }
+  .rep { text-align: left; margin-top: 20px; }
+  .bucket { border-top: 1px solid var(--border); padding: 10px 0; }
+  .bucket b { white-space: nowrap; color: var(--gold); }
+  .cap-tag { display: inline-block; padding: 4px 12px; border-radius: 999px; background: #134e4a; color: #5eead4; border: 1px solid var(--teal); font-size: 13px; margin: 0 6px 6px 0; }
+  .pill-warn { background: #431407; color: #fb923c; }
+  .skill { padding: 10px 0; border-top: 1px solid var(--border); }
+  .skill:first-child { border-top: 0; padding-top: 2px; }
+  .skill .srow { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; }
+  .skill .note { margin: 4px 0 0; }
+  /* Reputation History: one stacked row per score change. */
+  .hist { border-top: 1px solid var(--border); padding: 10px 0; }
+  .hist:first-child { border-top: 0; padding-top: 2px; }
+  .hrow { display: flex; gap: 8px; font-size: 13px; align-items: baseline; }
+  .hrow .hdate { color: var(--muted); white-space: nowrap; }
+  .hrow .hact { flex: 1; }
+  .hrow b { color: var(--gold); white-space: nowrap; }
+  .hist .note { margin: 2px 0 0; }
+  .pill-live { background: #134e4a; color: #5eead4; }
+  /* Avatar gallery: 6 preset avatars (3 robot poses, 3 Kong poses). */
+  .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+  .av-pick { text-align: left; margin-top: 20px; }
+  .av-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 12px; }
+  .av-item { background: transparent; border: 0; padding: 0; cursor: pointer; text-align: center; }
+  .av-item img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 2px solid var(--border); display: block; }
+  .av-item.selected img { border-color: var(--gold); }
+  .av-item .av-name { display: block; font-size: 13px; color: #aab8e0; margin-top: 6px; }
+  /* v6: wallet copy button, DEMO emphasis, score chart. */
+  .copy-btn { padding: 4px 10px; font-size: 12px; border-radius: 999px; background: var(--surface-2); color: var(--teal); border: 1px solid var(--border); font-weight: normal; margin-left: 6px; }
+  .demo-banner b { font-size: 15px; letter-spacing: 1px; }
+  .chart text { fill: var(--muted); font-size: 10px; font-family: system-ui, sans-serif; }
+  .chart .gridline { stroke: var(--border); stroke-width: 1; }
+  .chart .line { fill: none; stroke: var(--gold); stroke-width: 2; }
+  .chart .dot { fill: var(--gold); }
+  @media (max-width: 560px) {
+    body { padding: 24px 16px 40px; }
+    h1 { font-size: 26px; }
+    .box { padding: 18px 16px; }
+    .hero { padding: 24px 16px 20px; }
+    .av-grid { gap: 10px; }
+    .topnav nav { gap: 12px; }
+  }
+
+</style>
+</head>
+<body>
+<header class="topnav">
+  <a class="brand" href="./index.html">AgentQuest</a>
+  <nav>
+    <a href="./index.html">Home</a>
+    <a href="./discover.html">Explore Agents</a>
+    <a href="./quests.html">Quests <span class="soon">Soon</span></a>
+    <a href="./leaderboard.html">Leaderboard <span class="soon">Soon</span></a>
+    <a href="./profile.html" class="active" aria-current="page">My Profile</a>
+    <a href="./docs.html">Docs <span class="soon">Soon</span></a>
+    <a href="./status.html">Status</a>
+  </nav>
+</header>
+
+<div id="demoBanner" class="demo-banner" hidden><b>DEMO</b> &mdash; sample data
+for layout testing, NOT live on-chain values. Remove <code>?demo=1</code> from
+the URL for a real profile.</div>
+
+<h1>Agent Profile</h1>
+<p class="tagline">The Identity &amp; Reputation Network for AI Agents.</p>
+<p>Read-only on-chain profile for any wallet — Agent ID verification, badge
+collection, quest history, and the AgentQuest Reputation Score. Everything
+below is read live from BNB Smart Chain. No server, no sign-up, no transaction
+is ever sent from this page.</p>
+
+<p id="status" class="note">Enter a wallet address, or wait for the example profile to load.</p>
+
+<div class="box hero" id="headerBox" hidden>
+  <span class="pill pill-ok pub-pill">Public Profile</span>
+  <div class="avatar" id="avatarSlot" aria-hidden="true">
+    <svg viewBox="0 0 48 48" fill="none">
+      <rect x="14" y="12" width="20" height="18" rx="5" stroke="#f5c542" stroke-width="2.5"/>
+      <line x1="24" y1="12" x2="24" y2="6" stroke="#f5c542" stroke-width="2.5"/>
+      <circle cx="24" cy="5" r="2" fill="#f5c542"/>
+      <circle cx="20" cy="20" r="2" fill="#f5c542"/>
+      <circle cx="28" cy="20" r="2" fill="#f5c542"/>
+      <path d="M19 25 h10" stroke="#f5c542" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="12" y1="18" x2="14" y2="18" stroke="#f5c542" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="34" y1="18" x2="36" y2="18" stroke="#f5c542" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="display-name" id="displayNameOut">&mdash;</div>
+  <div class="handle-line" id="handleOut">&mdash;</div>
+  <div id="demoPill" style="margin:6px 0" hidden><span class="pill pill-warn">DEMO &mdash; sample data, not live</span></div>
+  <div id="agentIdPill"><span class="pill pill-muted">Checking&hellip;</span></div>
+  <p class="member-line" id="memberSinceOut" hidden>BNB Smart Chain &middot; Member since <span id="memberSinceYear">&mdash;</span></p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hnum gold" id="heroScore">&mdash;</div><div class="hlbl">Reputation</div></div>
+    <div class="hstat"><div class="hnum" id="heroBadges">&mdash;</div><div class="hlbl">Badges</div></div>
+    <div class="hstat"><div class="hnum" id="heroStreak">&mdash;</div><div class="hlbl">Day Streak</div></div>
+  </div>
+  <div class="level" id="levelWrap">
+    <div class="lrow"><span>Reputation Level</span><span class="lname" id="levelName">&mdash;</span></div>
+    <div class="lbar"><div class="lfill" id="levelFill" style="width:0%"></div></div>
+    <div class="lpts" id="levelPts">&mdash; / 1,000 points</div>
+    <div class="lpts" id="levelNext"></div>
+  </div>
+  <hr class="hero-div">
+  <div class="row"><span>Wallet</span><span><span class="mono" id="walletShort">&mdash;</span><button id="copyWalletBtn" class="copy-btn" type="button">Copy</button></span></div>
+  <div class="row"><span>Network</span><b>BNB Smart Chain</b></div>
+  <div class="row"><span>Profile status</span><span id="profileStatusPill"><span class="pill pill-muted">Checking&hellip;</span></span></div>
+  <button id="shareBtn" class="share-btn">Share Agent Profile</button>
+  <p class="note" id="shareNote" hidden>Link copied</p>
+  <p class="note" style="margin-top:10px"><a href="./discover.html">Discover agents &rarr;</a></p>
+  <div class="av-pick">
+    <h2>Choose Your Avatar</h2>
+    <div class="av-grid" id="avatarGrid"></div>
+    <p class="note">Pick an avatar &mdash; change it anytime, as often as you like. Your latest pick is saved in this browser, and the one shown to everyone.</p>
+  </div>
+  <div class="rep">
+    <p style="margin:4px 0 0"><b>AgentQuest Reputation Score (v1)</b> &mdash; our own
+    score, not a Binance score. Max 1,000.</p>
+    <div id="scoreBreakdown" style="margin-top:8px"></div>
+    <p class="note" style="margin-top:10px"><b>How it&rsquo;s calculated:</b> Agent ID 100 &middot; Badges 50 each (max 200) &middot; Quest Contributions 30 per Sparks (max 150) + 30 per campaign completion (max 150) &middot; Consistency 3 per streak day (max 90) + 2 per check-in (max 60) &middot; Partner Endorsement and Community 0 &mdash; coming soon. Levels: Bronze 0&ndash;249 &middot; Silver 250&ndash;499 &middot; Gold 500&ndash;749 &middot; Platinum 750&ndash;999 &middot; Diamond 1,000.</p>
+    <p class="note" style="margin-top:6px">The campaign half of Quest Contributions (150 of 300 pts) is empty for everyone right now &mdash; campaigns launch Dec 2026. That&rsquo;s where most future points come from.</p>
+  </div>
+</div>
+
+<div class="box" id="lookupBox">
+  <h2>View another profile</h2>
+  <label for="addr">Wallet address (0x&hellip;)</label>
+  <input id="addr" type="text" placeholder="0x..." spellcheck="false">
+  <button id="viewBtn">View profile</button>
+  <p class="note">No address? We show an example profile (kingkoung.ai) by default.
+  Share a profile with a link: <code>profile.html?wallet=0x&hellip;</code></p>
+</div>
+
+<div class="box" id="badgesBox" hidden>
+  <h2>Badge Collection</h2>
+  <p class="note" id="badgesNote">Soulbound AgentQuest badges (ERC-5192) held by this wallet.</p>
+  <div class="grid" id="badgeGrid"></div>
+  <p class="err" id="badgesErr" hidden></p>
+</div>
+
+<div class="box" id="questsBox" hidden>
+  <h2>Quest History</h2>
+  <div class="row"><span>Current streak</span><b id="streakOut">&mdash;</b></div>
+  <div class="row"><span>Total check-ins</span><b id="totalOut">&mdash;</b></div>
+  <div class="row"><span>Checked in today</span><b id="todayOut">&mdash;</b></div>
+  <div class="row"><span>Quest Sparks held</span><b id="sparksOut">&mdash;</b></div>
+  <div class="row"><span>Sparks token IDs</span><b id="sparksIds">&mdash;</b></div>
+  <div id="activityWrap" hidden>
+    <p style="margin:12px 0 4px"><b>Activity</b></p>
+    <div id="activityList"></div>
+  </div>
+  <p class="err" id="questsErr" hidden></p>
+</div>
+
+<div class="box" id="skillsBox" hidden>
+  <h2>Skills &amp; Capabilities</h2>
+  <p class="note" style="margin:0 0 6px">Agent Capabilities</p>
+  <div id="capTags"></div>
+  <p style="margin:12px 0 4px"><b>Verified Skills</b></p>
+  <div id="skillsList"></div>
+  <p class="note" style="margin-top:12px">Skills are proven by work, not self-selected.</p>
+  <p class="note">A skill becomes Verified when on-chain evidence exists &mdash; completed tagged quests, partner attestations, or deployed verified contracts linked to this wallet.</p>
+  <p class="err" id="skillsErr" hidden></p>
+</div>
+
+<div class="box" id="statsBox" hidden>
+  <h2>Contribution Stats</h2>
+  <div class="grid">
+    <div class="stat"><div class="num" id="statBadges">&mdash;</div><div class="lbl">Badges (max 4)</div></div>
+    <div class="stat"><div class="num" id="statStreak">&mdash;</div><div class="lbl">Day streak</div></div>
+    <div class="stat"><div class="num" id="statTotal">&mdash;</div><div class="lbl">Total check-ins</div></div>
+    <div class="stat"><div class="num" id="statSparks">&mdash;</div><div class="lbl">Quest Sparks</div></div>
+    <div class="stat"><div class="num" id="statAgentId">&mdash;</div><div class="lbl">Agent ID</div></div>
+    <div class="stat"><div class="num" id="statScore">&mdash;</div><div class="lbl">Reputation score</div></div>
+  </div>
+  <div id="scoreChartWrap" hidden>
+    <p style="margin:14px 0 4px"><b>Reputation over time</b></p>
+    <div id="scoreChart" class="chart"></div>
+    <p class="note" id="scoreChartNote"></p>
+  </div>
+  <p class="note" id="updatedNote" style="margin-top:10px"></p>
+</div>
+
+<div class="box" id="historyBox" hidden>
+  <h2>Reputation History</h2>
+  <p class="note">How the score was earned &mdash; every change with its date, source,
+  and proof. Oldest first.</p>
+  <p class="note" id="historyAsOf"></p>
+  <div id="historyList"><p class="note">Loading history&hellip;</p></div>
+  <p class="note" id="historyRecon" style="margin-top:10px"></p>
+  <p class="err" id="historyErr" hidden></p>
+</div>
+
+<p class="note" style="margin-top:16px">Contracts (BSC mainnet):
+<a class="mono" href="https://bscscan.com/address/0x26ad277193ff31bd086a47bf7b1d25a93573c989" target="_blank" rel="noopener">AgentQuest 0x26ad&hellip;73c989</a> &middot;
+<a class="mono" href="https://bscscan.com/address/0xac9a16f991712aebe04b24e1a98e6b7c0d451afb" target="_blank" rel="noopener">Streak 0xac9a&hellip;451afb</a> &middot;
+<a class="mono" href="https://bscscan.com/address/0x20ef401acddb836e3576aade51f620f6a99631cb" target="_blank" rel="noopener">Quest Sparks 0x20ef&hellip;631cb</a> &middot;
+<a class="mono" href="https://bscscan.com/address/0x60b9262456de011f7d15a54cdd8c48baaa8b022f" target="_blank" rel="noopener">Agent ID 0x60b9&hellip;022f</a>.
+Badge token IDs are found by scanning ownership on-chain (the badge contract
+has no enumeration function). If a read fails, the section says so instead of
+showing a false zero.</p>
+
+<script>
+const BADGE   = "0x26ad277193ff31bd086a47bf7b1d25a93573c989";
+const STREAK  = "0xac9a16f991712aebe04b24e1a98e6b7c0d451afb";
+const SPARKS  = "0x20ef401acddb836e3576aade51f620f6a99631cb";
+const AGENTID = "0x60b9262456de011f7d15a54cdd8c48baaa8b022f";
+const MULTICALL3 = "0xcA11bde05977b3631167028862bE2a173976CA11";
+const RPCS = [
+  "https://bsc-dataseed2.bnbchain.org",
+  "https://bsc-dataseed1.bnbchain.org",
+  "https://bsc.publicnode.com",
+  "https://binance.llamarpc.com",
+];
+const EXAMPLE_WALLET = "0x0a90F878E4CF3EF3BC0Ee4a67e2FF0166986ad5F";
+const QUESTS = [
+  { name: "Agent ID Holder", color: "#6366f1" },
+  { name: "Collector I", color: "#22c55e" },
+  { name: "Collector II", color: "#f59e0b" },
+  { name: "Collector III", color: "#a855f7" },
+];
+const BADGE_ABI = [
+  "function balanceOf(address owner) view returns (uint256)",
+  "function nextTokenId() view returns (uint256)",
+  "function tokenQuest(uint256 tokenId) view returns (uint8)",
+  "function tokenURI(uint256 tokenId) view returns (string)",
+];
+const STREAK_ABI = [
+  "function streak(address holder) view returns (uint256)",
+  "function totalCheckins(address holder) view returns (uint256)",
+  "function hasCheckedInToday(address user) view returns (bool)",
+];
+const SPARKS_ABI = [
+  "function balanceOf(address owner) view returns (uint256)",
+  "function nextTokenId() view returns (uint256)",
+];
+const AGENTID_ABI = [
+  "function balanceOf(address owner) view returns (uint256)",
+  "function handleOf(address owner) view returns (string)",
+];
+const MULTICALL_ABI = [
+  "function aggregate3((address target, bool allowFailure, bytes callData)[] calls) view returns ((bool success, bytes returnData)[])",
+];
+const SCAN_CHUNK = 200;
+const SCAN_CAP = 5000;
+
+/* Sample data for ?demo=1 — the example wallet's values, verified on-chain
+   27 Nov 2026 (badges #13/#23/#24/#25, streak 9, 9 check-ins, Sparks #1,
+   handle "kingkoung"). Demo mode is layout testing only. */
+const DEMO = {
+  wallet: EXAMPLE_WALLET,
+  agentIdBalance: 1, handle: "kingkoung",
+  badges: [
+    { id: 13, quest: 2 }, { id: 23, quest: 0 },
+    { id: 24, quest: 1 }, { id: 25, quest: 3 },
+  ],
+  streak: 9, totalCheckins: 9, checkedInToday: true,
+  sparks: [1],
+};
+
+/* Known identities: user-provided display names + member-since years for
+   handles we know personally. NOT on-chain data — the chain only stores the
+   handle (handleOf) and none of the three contracts has a display-name or
+   registration-date getter (verified from the full ABIs, 27 Nov 2026), and
+   the BscScan API needs a key that must never be exposed in a public page.
+   "KingKong AI" is the owner's own identity for handle "kingkoung";
+   member since 2026 is the year AgentQuest launched and the first badge was
+   minted (Nov 2026) — real, not invented. Unknown handles fall back to the
+   capitalised handle and show no member-since line. */
+const KNOWN_IDENTITIES = {
+  kingkoung: { displayName: "KingKong AI", memberSince: 2026 },
+};
+
+function displayNameFor(handle) {
+  if (!handle) return null;
+  const known = KNOWN_IDENTITIES[handle.toLowerCase()];
+  if (known) return known.displayName;
+  return handle.charAt(0).toUpperCase() + handle.slice(1);
+}
+
+let currentWallet = EXAMPLE_WALLET;
+let liveScoreTotal = null; /* set by render(); used by history reconciliation */
+let lastSparks = []; /* Sparks token IDs from the last render; used to upgrade links with mint txs */
+
+const $ = (id) => document.getElementById(id);
+
+const params = new URLSearchParams(location.search);
+const DEMO_MODE = params.has("demo");
+
+/* Address check that works with or without the ethers CDN. */
+function isAddr(v) {
+  if (typeof ethers !== "undefined") return ethers.isAddress(v);
+  return /^0x[0-9a-fA-F]{40}$/.test(v);
+}
+
+/* The page needs ethers.js from the CDN for live reads. Demo mode uses
+   bundled sample data + the history JSON, so it works without ethers
+   (offline layout preview). If it failed to load (offline) and this is
+   not demo mode, say so plainly instead of dying silently. */
+if (typeof ethers === "undefined" && !DEMO_MODE) {
+  $("status").textContent = "Could not load the ethers.js library from the CDN — check your connection and reload the page.";
+} else {
+
+/* Avatar gallery — 6 preset avatars (3 robot poses, 3 Kong poses).
+   Hero avatar resolution order:
+   1. avatars.json registry (wallet address -> file) — the latest pick,
+      shown to everyone; an entry can be replaced anytime, it is never
+      locked in. Nothing on this page writes to the registry; entries
+      are added by the site owner.
+   2. localStorage "aq-avatar" — this visitor's own pick, this browser.
+   3. Default robot SVG icon.
+   A registry entry wins over localStorage. */
+const AVATARS = [
+  { file: "robo-wave.jpg", name: "Robo Wave" },
+  { file: "robo-thumbs-up.jpg", name: "Robo Thumbs Up" },
+  { file: "robo-inspector.jpg", name: "Robo Inspector" },
+  { file: "kong-wave.jpg", name: "Kong Wave" },
+  { file: "kong-confident.jpg", name: "Kong Confident" },
+  { file: "kong-point.jpg", name: "Kong Point" },
+];
+const AVATAR_LS_KEY = "aq-avatar";
+let avatarRegistry = {};
+const avatarDefaultHTML = $("avatarSlot").innerHTML;
+
+function setHeroAvatar(file) {
+  const slot = $("avatarSlot");
+  if (!file) { slot.innerHTML = avatarDefaultHTML; slot.style.background = ""; return; }
+  slot.innerHTML = '<img src="avatars/' + file + '" alt="Profile avatar">';
+  slot.style.background = "transparent";
+}
+
+function resolveAvatar(wallet) {
+  const w = (wallet || "").toLowerCase();
+  if (avatarRegistry[w]) return avatarRegistry[w];
+  try {
+    const saved = localStorage.getItem(AVATAR_LS_KEY);
+    if (saved && AVATARS.some((a) => a.file === saved)) return saved;
+  } catch (e) { /* storage unavailable — fall through to default */ }
+  return null;
+}
+
+function markSelectedAvatar(file) {
+  const items = document.querySelectorAll("#avatarGrid .av-item");
+  items.forEach((el) => el.classList.toggle("selected", el.dataset.file === file));
+}
+
+function applyAvatar(wallet) {
+  const f = resolveAvatar(wallet);
+  setHeroAvatar(f);
+  markSelectedAvatar(f);
+}
+
+function buildAvatarGrid() {
+  const grid = $("avatarGrid");
+  grid.innerHTML = "";
+  for (const a of AVATARS) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "av-item";
+    b.dataset.file = a.file;
+    b.innerHTML = '<img src="avatars/' + a.file + '" alt="' + a.name + '">' +
+      '<span class="av-name">' + a.name + '</span>';
+    b.addEventListener("click", () => {
+      setHeroAvatar(a.file);
+      markSelectedAvatar(a.file);
+      try { localStorage.setItem(AVATAR_LS_KEY, a.file); } catch (e) { /* ignore */ }
+    });
+    grid.appendChild(b);
+  }
+}
+
+async function loadAvatarRegistry() {
+  try {
+    const r = await fetch("avatars.json");
+    if (!r.ok) return;
+    const data = await r.json();
+    if (data && typeof data === "object") avatarRegistry = data;
+  } catch (e) { /* registry is optional — ignore silently */ }
+}
+
+function shortAddr(a) {
+  return a.slice(0, 6) + "\u2026" + a.slice(-4);
+}
+
+/* "2026-11-18" -> "18 Nov 2026". Returns the input unchanged when it is
+   not a plain ISO date — never invent a date. */
+function fmtDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+  if (!m) return iso || "";
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return Number(m[3]) + " " + months[Number(m[2]) - 1] + " " + m[1];
+}
+
+/* Clipboard copy with a textarea fallback (clipboard API needs a secure
+   context / user gesture; the fallback covers the rest). */
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; }
+  catch (e) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta); return ok;
+    } catch (e2) { return false; }
+  }
+}
+
+/* Reputation Score — 1,000 points across 6 buckets. Campaigns, partner
+   attestations and contribution tracking do not exist yet, so those buckets
+   are honest zeros, shown — never hidden or faked. Returns null when any
+   input read failed. */
+function scoreBuckets(d) {
+  if (d.agentIdBalance === null || d.badges === null || d.sparks === null ||
+      d.streak === null || d.totalCheckins === null) return null;
+  const sparksPts = Math.min(d.sparks.length * 30, 150);
+  const streakPts = Math.min(d.streak, 30) * 3;
+  const checkinPts = Math.min(d.totalCheckins, 30) * 2;
+  return [
+    { name: "Verified Agent ID", pts: d.agentIdBalance > 0 ? 100 : 0, max: 100,
+      detail: d.agentIdBalance > 0 ? "Agent ID held" : "No Agent ID held" },
+    { name: "Achievement Badges", pts: Math.min(d.badges.length * 50, 200), max: 200,
+      detail: d.badges.length + " badge" + (d.badges.length === 1 ? "" : "s") + " × 50" },
+    { name: "Quest Contributions", pts: sparksPts, max: 300,
+      detail: "Quest Sparks " + d.sparks.length + " × 30 = " + sparksPts +
+        " · Campaigns 0 · campaigns launch Dec 2026" },
+    { name: "Consistency", pts: streakPts + checkinPts, max: 150,
+      detail: "streak " + Math.min(d.streak, 30) + " × 3 = " + streakPts +
+        " + check-ins " + Math.min(d.totalCheckins, 30) + " × 2 = " + checkinPts },
+    { name: "Partner Endorsement", pts: 0, max: 150,
+      detail: "Coming soon · partner attestations not live yet" },
+    { name: "Community Contributions", pts: 0, max: 100,
+      detail: "Coming soon · contribution tracking not live yet" },
+  ];
+}
+
+/* Reputation Level (v9): tier from the LIVE score, never hardcoded.
+   Bronze 0–249 · Silver 250–499 · Gold 500–749 · Platinum 750–999 · Diamond 1,000. */
+function reputationLevel(score) {
+  if (score >= 1000) return { name: "Diamond", cls: "tier-diamond" };
+  if (score >= 750) return { name: "Platinum", cls: "tier-platinum" };
+  if (score >= 500) return { name: "Gold", cls: "tier-gold" };
+  if (score >= 250) return { name: "Silver", cls: "tier-silver" };
+  return { name: "Bronze", cls: "tier-bronze" };
+}
+
+/* Find a working read-only RPC, trying each in order. */
+async function getProvider() {
+  let lastErr = null;
+  for (const url of RPCS) {
+    try {
+      const p = new ethers.JsonRpcProvider(url);
+      await Promise.race([
+        p.getBlockNumber(),
+        new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 10000)),
+      ]);
+      return p;
+    } catch (e) { lastErr = e; }
+  }
+  throw lastErr || new Error("all RPCs failed");
+}
+
+/* Batch ownerOf(1..maxId) through Multicall3 aggregate3, chunked. */
+async function findOwnedTokenIds(provider, contractAddr, maxId, wallet) {
+  const mc = new ethers.Contract(MULTICALL3, MULTICALL_ABI, provider);
+  const iface = new ethers.Interface(["function ownerOf(uint256 tokenId) view returns (address)"]);
+  const owned = [];
+  const cap = Math.min(maxId, SCAN_CAP);
+  for (let start = 1; start <= cap; start += SCAN_CHUNK) {
+    const end = Math.min(start + SCAN_CHUNK - 1, cap);
+    const calls = [];
+    for (let t = start; t <= end; t++) {
+      calls.push({ target: contractAddr, allowFailure: true, callData: iface.encodeFunctionData("ownerOf", [t]) });
+    }
+    const results = await mc.aggregate3(calls);
+    results.forEach((r, i) => {
+      if (r.success && r.returnData.length === 66) {
+        const owner = "0x" + r.returnData.slice(-40);
+        if (owner.toLowerCase() === wallet.toLowerCase()) owned.push(start + i);
+      }
+    });
+  }
+  return owned;
+}
+
+async function loadLive(wallet) {
+  const provider = await getProvider();
+  const badge = new ethers.Contract(BADGE, BADGE_ABI, provider);
+  const streakC = new ethers.Contract(STREAK, STREAK_ABI, provider);
+  const sparksC = new ethers.Contract(SPARKS, SPARKS_ABI, provider);
+  const agentC = new ethers.Contract(AGENTID, AGENTID_ABI, provider);
+
+  const d = { wallet, agentIdBalance: null, handle: null, badges: null,
+              streak: null, totalCheckins: null, checkedInToday: null,
+              sparks: null, errors: {} };
+
+  // Agent ID verification + handle (handleOf is best-effort: the registry
+  // does not support enumeration, but handleOf(address) resolves the name).
+  try {
+    d.agentIdBalance = Number(await agentC.balanceOf(wallet));
+    if (d.agentIdBalance > 0) {
+      try { d.handle = await agentC.handleOf(wallet); }
+      catch (e) { d.handle = ""; d.errors.handle = "handle could not be resolved"; }
+    }
+  } catch (e) { d.errors.agentId = "could not read Agent ID status — RPC unavailable, try again"; }
+
+  // Streak + total check-ins.
+  try {
+    d.streak = Number(await streakC.streak(wallet));
+    d.totalCheckins = Number(await streakC.totalCheckins(wallet));
+    d.checkedInToday = await streakC.hasCheckedInToday(wallet);
+  } catch (e) { d.errors.streak = "could not read quest history — RPC unavailable, try again"; }
+
+  // Badge balance + owned token IDs via Multicall3 scan.
+  try {
+    const bal = Number(await badge.balanceOf(wallet));
+    if (bal === 0) {
+      d.badges = [];
+    } else {
+      const nextId = Number(await badge.nextTokenId());
+      const ids = await findOwnedTokenIds(provider, BADGE, nextId - 1, wallet);
+      d.badges = [];
+      for (const id of ids) {
+        let quest = null;
+        try { quest = Number(await badge.tokenQuest(id)); } catch (e) { /* quest name unknown */ }
+        d.badges.push({ id, quest });
+      }
+    }
+  } catch (e) { d.errors.badges = "could not read badge collection — RPC unavailable, try again"; }
+
+  // Quest Sparks balance + owned token IDs via Multicall3 scan.
+  try {
+    const bal = Number(await sparksC.balanceOf(wallet));
+    if (bal === 0) {
+      d.sparks = [];
+    } else {
+      const nextId = Number(await sparksC.nextTokenId());
+      d.sparks = await findOwnedTokenIds(provider, SPARKS, nextId - 1, wallet);
+    }
+  } catch (e) { d.errors.sparks = "could not read Quest Sparks — RPC unavailable, try again"; }
+
+  return d;
+}
+
+/* Best-effort badge artwork: tokenURI is an on-chain SVG data URI (or JSON
+   metadata pointing at one). Any failure leaves the text card as-is. */
+async function badgeArtwork(tokenId) {
+  try {
+    const provider = await getProvider();
+    const badge = new ethers.Contract(BADGE, BADGE_ABI, provider);
+    const uri = await badge.tokenURI(tokenId);
+    if (uri.startsWith("data:image/svg+xml")) return uri;
+    if (uri.startsWith("data:application/json;base64,")) {
+      const meta = JSON.parse(atob(uri.split(",")[1]));
+      if (meta.image && meta.image.startsWith("data:image/svg+xml")) return meta.image;
+    }
+    return null;
+  } catch (e) { return null; }
+}
+
+/* Skills & Capabilities — v1 catalog. HARD RULE: a capability tag is shown
+   ONLY for a skill whose status is Verified, and a skill is Verified ONLY
+   when on-chain evidence exists. Nothing is marked Verified by hand.
+   - Quest Completion: Verified iff badges >= 1 OR totalCheckins >= 1 OR
+     Quest Sparks >= 1, from the reads this page already makes. The evidence
+     line quotes the live numbers.
+   - Blockchain Research: Unverified in v1 — no on-chain proof is linked to
+     this wallet yet. Verifiable later via a tagged Platform Quest campaign
+     or a partner attestation.
+   - Smart Contract Development: Unverified in v1, same as above. */
+function renderSkills(d) {
+  const tags = $("capTags");
+  const list = $("skillsList");
+  tags.innerHTML = "";
+  list.innerHTML = "";
+
+  // Quest Completion: live proof from the reads this page already made.
+  const b = d.badges === null ? null : d.badges.length;
+  const c = d.totalCheckins;
+  const s = d.sparks === null ? null : d.sparks.length;
+  const anyRead = b !== null || c !== null || s !== null;
+  const proven = (b !== null && b >= 1) || (c !== null && c >= 1) || (s !== null && s >= 1);
+
+  let questStatus, questPill, questEvidence;
+  if (proven) {
+    questStatus = "Verified"; questPill = "pill-ok";
+    const parts = [];
+    if (b !== null) parts.push(b + " badge" + (b === 1 ? "" : "s"));
+    if (c !== null) parts.push(c + " check-in" + (c === 1 ? "" : "s"));
+    if (s !== null) parts.push(s + " Quest Spark" + (s === 1 ? "" : "s"));
+    questEvidence = parts.join(" · ");
+  } else if (!anyRead) {
+    questStatus = "Could not verify"; questPill = "pill-muted";
+    questEvidence = "Quest activity could not be read — RPC unavailable, try again.";
+  } else {
+    questStatus = "Unverified"; questPill = "pill-warn";
+    questEvidence = "No badges, check-ins, or Quest Sparks on-chain yet.";
+  }
+
+  const unverifiedNote = "No on-chain proof linked to this wallet yet — verify via a tagged Platform Quest campaign or partner attestation.";
+
+  const rows = [
+    { name: "Quest Completion", status: questStatus, pill: questPill, note: questEvidence },
+    { name: "Blockchain Research", status: "Unverified", pill: "pill-warn", note: unverifiedNote },
+    { name: "Smart Contract Development", status: "Unverified", pill: "pill-warn", note: unverifiedNote },
+  ];
+
+  // Capability tags: ONLY for Verified skills.
+  const verified = rows.filter((r) => r.status === "Verified");
+  if (verified.length === 0) {
+    tags.innerHTML = '<p class="note">No verified capabilities yet.</p>';
+  } else {
+    for (const r of verified) {
+      const t = document.createElement("span");
+      t.className = "cap-tag";
+      t.textContent = r.name;
+      tags.appendChild(t);
+    }
+  }
+
+  for (const r of rows) {
+    const div = document.createElement("div");
+    div.className = "skill";
+    div.innerHTML = '<div class="srow"><span>' + r.name + '</span>' +
+      '<span class="pill ' + r.pill + '">' + r.status + '</span></div>' +
+      '<p class="note">' + r.note + '</p>';
+    list.appendChild(div);
+  }
+}
+
+function render(d) {
+  $("headerBox").hidden = false;
+  $("badgesBox").hidden = false;
+  $("questsBox").hidden = false;
+  $("skillsBox").hidden = false;
+  $("statsBox").hidden = false;
+  $("historyBox").hidden = false;
+  renderSkills(d);
+  $("walletShort").textContent = shortAddr(d.wallet);
+  $("demoPill").hidden = !DEMO_MODE;
+  applyAvatar(d.wallet);
+  // History-driven sections are rebuilt by applyHistoryData() after the
+  // history JSON loads; clear any stale content from a previous wallet.
+  lastSparks = [];
+  $("activityWrap").hidden = true;
+  $("activityList").innerHTML = "";
+  $("scoreChartWrap").hidden = true;
+  $("scoreChart").innerHTML = "";
+  $("scoreChartNote").textContent = "";
+
+  // Hero identity: display name, @handle, verification pill, member-since.
+  // The avatar is a generic robot icon, not an on-chain photo.
+  const handle = d.handle || "";
+  const name = displayNameFor(handle);
+  $("displayNameOut").textContent = name || shortAddr(d.wallet);
+  $("handleOut").textContent = handle ? "@" + handle + ".ai" : "No Agent ID handle";
+  const known = handle ? KNOWN_IDENTITIES[handle.toLowerCase()] : null;
+  if (known && known.memberSince) {
+    $("memberSinceOut").hidden = false;
+    $("memberSinceYear").textContent = known.memberSince;
+  } else {
+    $("memberSinceOut").hidden = true;
+  }
+
+  // Agent ID pill + profile status.
+  if (d.agentIdBalance === null) {
+    $("agentIdPill").innerHTML = '<span class="pill pill-muted">Could not verify</span> <span class="pill pill-chain">BNB Chain</span>';
+    $("profileStatusPill").innerHTML = '<span class="pill pill-muted">Could not verify</span>';
+  } else if (d.agentIdBalance > 0) {
+    $("agentIdPill").innerHTML = '<span class="pill pill-ok">Binance Agent ID Verified</span> <span class="pill pill-chain">BNB Chain</span>';
+    $("profileStatusPill").innerHTML = '<span class="pill pill-ok">Verified</span>';
+  } else {
+    $("agentIdPill").innerHTML = '<span class="pill pill-no">Not an Agent ID holder</span> <span class="pill pill-chain">BNB Chain</span>';
+    $("profileStatusPill").innerHTML = '<span class="pill pill-no">Not verified</span>';
+  }
+
+  // Score (only when every input was read). The big number lives in the
+  // hero stats row; the bucket breakdown stays below it.
+  const buckets = scoreBuckets(d);
+  if (buckets) {
+    const total = buckets.reduce((s, b) => s + b.pts, 0);
+    liveScoreTotal = total;
+    $("heroScore").textContent = total;
+    $("statScore").textContent = total;
+    // Reputation Level bar (v9): tier + fill computed from the live total.
+    const lvl = reputationLevel(total);
+    $("levelName").textContent = lvl.name;
+    $("levelName").className = "lname " + lvl.cls;
+    $("levelFill").style.width = Math.min(100, total / 10) + "%";
+    $("levelPts").textContent = total.toLocaleString("en-US") + " / 1,000 points";
+    // Next level hint (patch): points to the next tier, from the live total.
+    const NEXT_TIERS = [{ at: 250, name: "Silver" }, { at: 500, name: "Gold" },
+      { at: 750, name: "Platinum" }, { at: 1000, name: "Diamond" }];
+    const nt = NEXT_TIERS.find((t) => total < t.at);
+    $("levelNext").textContent = nt
+      ? (nt.at - total) + " points to " + nt.name +
+        " — check-in +2/day · streak +3/day · badge +50 · Sparks +30 · campaign +30"
+      : "Diamond reached — the top level";
+    $("scoreBreakdown").innerHTML = buckets.map((b) =>
+      '<div class="row bucket"><span>' + b.name +
+      '<br><span class="note">' + b.detail + '</span></span>' +
+      '<b>' + b.pts + ' / ' + b.max + '</b></div>').join("");
+  } else {
+    liveScoreTotal = null;
+    $("heroScore").textContent = "—";
+    $("statScore").textContent = "—";
+    $("levelName").textContent = "—";
+    $("levelName").className = "lname";
+    $("levelFill").style.width = "0%";
+    $("levelPts").textContent = "Score unavailable";
+    $("levelNext").textContent = "";
+    $("scoreBreakdown").textContent = "Score unavailable — one or more reads failed. Try again.";
+  }
+
+  // Badge collection.
+  const grid = $("badgeGrid");
+  grid.innerHTML = "";
+  if (d.badges === null) {
+    $("badgesErr").hidden = false;
+    $("badgesErr").textContent = d.errors.badges || "Badge collection could not be read.";
+    $("statBadges").textContent = "—";
+    $("heroBadges").textContent = "—";
+  } else if (d.badges.length === 0) {
+    $("badgesErr").hidden = false;
+    $("badgesErr").textContent = "";
+    grid.innerHTML = '<p class="note">No badges yet.</p>';
+    $("statBadges").textContent = "0";
+    $("heroBadges").textContent = "0";
+  } else {
+    $("badgesErr").hidden = true;
+    $("statBadges").textContent = d.badges.length;
+    $("heroBadges").textContent = d.badges.length;
+    $("badgesNote").textContent = d.badges.length + " badge" + (d.badges.length > 1 ? "s" : "") + " held (max 4 per wallet).";
+    for (const b of d.badges) {
+      const q = b.quest !== null && QUESTS[b.quest] ? QUESTS[b.quest] : { name: "Unknown quest", color: "#6366f1" };
+      const card = document.createElement("div");
+      card.className = "badge-card";
+      card.dataset.tokenId = String(b.id);
+      card.style.borderLeftColor = q.color;
+      card.innerHTML = '<div class="tid">#' + b.id + '</div>' +
+        '<div class="qname" style="color:' + q.color + '">' + q.name + '</div>' +
+        '<p class="note" style="margin:6px 0 0"><a class="bsc-link" href="https://bscscan.com/token/' + BADGE + '?a=' + b.id + '" target="_blank" rel="noopener">View on BscScan</a></p>';
+      grid.appendChild(card);
+      // Best-effort artwork, added when it loads (skipped in demo mode —
+      // there is no provider to read tokenURI from).
+      if (!DEMO_MODE) badgeArtwork(b.id).then((src) => {
+        if (!src) return;
+        const img = document.createElement("img");
+        img.src = src; img.alt = "Quest Sparks badge #" + b.id;
+        card.insertBefore(img, card.firstChild);
+      });
+    }
+  }
+
+  // Quest history.
+  if (d.streak === null) {
+    $("questsErr").hidden = false;
+    $("questsErr").textContent = d.errors.streak || "Quest history could not be read.";
+    $("statStreak").textContent = "—";
+    $("statTotal").textContent = "—";
+    $("heroStreak").textContent = "—";
+  } else {
+    $("questsErr").hidden = true;
+    $("streakOut").textContent = d.streak + (d.streak === 1 ? " day" : " days");
+    $("totalOut").textContent = d.totalCheckins;
+    $("todayOut").textContent = d.checkedInToday === null ? "—" : (d.checkedInToday ? "Yes" : "Not yet");
+    $("statStreak").textContent = d.streak;
+    $("statTotal").textContent = d.totalCheckins;
+    $("heroStreak").textContent = d.streak;
+  }
+  if (d.sparks === null) {
+    $("sparksOut").textContent = "—";
+    $("sparksIds").textContent = d.errors.sparks || "could not read";
+    $("statSparks").textContent = "—";
+  } else {
+    $("sparksOut").textContent = d.sparks.length;
+    lastSparks = d.sparks.slice();
+    $("sparksIds").innerHTML = d.sparks.length ? d.sparks.map((t) =>
+      '<a href="https://bscscan.com/token/' + SPARKS + '?a=' + t + '" target="_blank" rel="noopener">#' + t + '</a>').join(", ") : "—";
+    $("statSparks").textContent = d.sparks.length;
+  }
+  $("statAgentId").textContent = d.agentIdBalance === null ? "—" : (d.agentIdBalance > 0 ? "Yes" : "No");
+  $("updatedNote").textContent = "Read live from BNB Smart Chain at " +
+    new Date().toLocaleTimeString("en-GB", { hour12: false }) + " (local time).";
+}
+
+/* Reputation History — reads the backend-generated JSON for this wallet
+   (reputation-history/<address>.json, built from eth_getLogs evidence by
+   reputation-history.py). Demo mode uses the SAME json, not separate stubs.
+   A missing file means the wallet has not been indexed yet — never a fake
+   empty history. The footer reconciles the history sum against the live
+   score and says so plainly when they differ. */
+async function loadHistory(wallet) {
+  const list = $("historyList");
+  const err = $("historyErr");
+  const recon = $("historyRecon");
+  err.hidden = true;
+  recon.textContent = "";
+  $("historyAsOf").textContent = "";
+  list.innerHTML = '<p class="note">Loading history&hellip;</p>';
+  const url = "reputation-history/" + wallet.toLowerCase() + ".json";
+  let data;
+  try {
+    const r = await fetch(url);
+    if (r.status === 404) {
+      list.innerHTML = "";
+      err.hidden = false;
+      err.textContent = "History not indexed for this wallet yet.";
+      return;
+    }
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    data = await r.json();
+  } catch (e) {
+    list.innerHTML = "";
+    err.hidden = false;
+    err.textContent = "Could not load reputation history — try again.";
+    return;
+  }
+  $("historyAsOf").textContent = data.generatedAt
+    ? "History as of " + data.generatedAt + "."
+    : "";
+  applyHistoryData(data);
+  list.innerHTML = "";
+  let sum = 0;
+  for (const e of data.entries) {
+    sum += e.points;
+    const div = document.createElement("div");
+    div.className = "hist";
+    const liveTag = e.live ? ' <span class="pill pill-live">live</span>' : "";
+    const verTag = e.verified === false
+      ? ' <span class="pill pill-warn">unverified</span>'
+      : (e.verified === "derived" ? ' <span class="pill pill-muted">derived</span>' : "");
+    const dateText = e.date || "date unknown";
+    const proof = e.txHash
+      ? '<a href="' + e.bscscanUrl + '" target="_blank" rel="noopener">View tx</a>'
+      : (e.bscscanUrl
+        ? '<a href="' + e.bscscanUrl + '" target="_blank" rel="noopener">View contract</a>'
+        : "");
+    div.innerHTML =
+      '<div class="hrow"><span class="hdate">' + dateText + '</span>' +
+      '<span class="hact">' + e.activity + liveTag + verTag + '</span>' +
+      '<b>+' + e.points + '</b></div>' +
+      '<p class="note">' + e.source + (proof ? ' &middot; ' + proof : '') + '</p>';
+    list.appendChild(div);
+  }
+  let reconText;
+  if (liveScoreTotal !== null) {
+    reconText = sum === liveScoreTotal
+      ? "Total of history: " + sum + " — matches the live Reputation Score above."
+      : "History total (" + sum + ") does not match the live score (" + liveScoreTotal +
+        ") — see note. Differences can come from score caps and the live streak line, which moves daily.";
+  } else {
+    reconText = "Total of history: " + sum + ".";
+  }
+  const unv = data.entries.filter(x => x.verified === false).length;
+  if (unv) reconText += " " + unv + " entry date unverified (Agent ID) — see row above.";
+  recon.textContent = reconText;
+}
+
+/* History-driven extras (v6 items 4–7): badge obtained dates + mint-tx
+   links, Sparks mint-tx links, the Quest History activity list, and the
+   cumulative-score chart. Everything comes from the history JSON; a missing
+   file simply leaves these sections hidden or at their token-link defaults
+   — never invented. */
+let historyData = null;
+
+function applyHistoryData(data) {
+  historyData = data;
+  if (!data || !Array.isArray(data.entries)) return;
+  const badgeDate = {}, badgeTx = {}, sparksTx = {};
+  const checkins = [];
+  const others = [];
+  for (const e of data.entries) {
+    if (!e.date) continue; /* Agent ID (date unknown) — not listed or plotted */
+    if (e.live) continue; /* current streak line — already shown as a row */
+    const bm = /badge #(\d+) minted/.exec(e.activity || "");
+    if (bm) { badgeDate[bm[1]] = e.date; if (e.txHash) badgeTx[bm[1]] = e; continue; }
+    const sm = /Quest Sparks #(\d+) minted/.exec(e.activity || "");
+    if (sm) { if (e.txHash) sparksTx[sm[1]] = e; others.push(e); continue; }
+    if (/Daily check-in/.test(e.activity || "")) { checkins.push(e); continue; }
+    others.push(e);
+  }
+
+  /* Item 4 + 7: badge obtained date + mint-tx link on each badge card. */
+  document.querySelectorAll("#badgeGrid .badge-card").forEach((card) => {
+    const id = card.dataset.tokenId;
+    if (!id) return;
+    if (badgeDate[id] && !card.querySelector(".obtained-date")) {
+      const dv = document.createElement("div");
+      dv.className = "note obtained-date";
+      dv.style.margin = "4px 0 0";
+      dv.textContent = "Obtained " + fmtDate(badgeDate[id]);
+      card.appendChild(dv);
+    }
+    if (badgeTx[id]) {
+      const a = card.querySelector("a.bsc-link");
+      if (a) { a.href = badgeTx[id].bscscanUrl; a.textContent = "View mint tx"; }
+    }
+  });
+
+  /* Item 7: Sparks token IDs link to their mint tx when known. */
+  if (lastSparks.length) {
+    $("sparksIds").innerHTML = lastSparks.map((t) => {
+      const tx = sparksTx[String(t)];
+      const url = tx ? tx.bscscanUrl : "https://bscscan.com/token/" + SPARKS + "?a=" + t;
+      const title = tx ? ' title="View mint tx"' : "";
+      return '<a href="' + url + '" target="_blank" rel="noopener"' + title + '>#' + t + '</a>';
+    }).join(", ");
+  }
+
+  /* Item 5: Quest History activity list from the history entries.
+     Daily check-ins collapse into one row with a date range. */
+  const rows = [];
+  for (const e of others) {
+    const proof = e.txHash
+      ? '<a href="' + e.bscscanUrl + '" target="_blank" rel="noopener">tx ' + e.txHash.slice(0, 6) + "\u2026" + e.txHash.slice(-4) + '</a>'
+      : (e.bscscanUrl ? '<a href="' + e.bscscanUrl + '" target="_blank" rel="noopener">View contract</a>' : "");
+    rows.push({ sort: e.date, date: fmtDate(e.date), html: e.activity + (proof ? " — " + proof : "") });
+  }
+  if (checkins.length) {
+    const first = checkins[0].date, last = checkins[checkins.length - 1].date;
+    const range = checkins.length === 1 ? fmtDate(first) : fmtDate(first) + " – " + fmtDate(last);
+    const contract = checkins[0].bscscanUrl
+      ? ' — <a href="' + checkins[0].bscscanUrl + '" target="_blank" rel="noopener">streak contract</a>' : "";
+    rows.push({ sort: first, date: range,
+      html: "Daily check-in" + (checkins.length > 1 ? " ×" + checkins.length : "") + contract });
+  }
+  rows.sort((a, b) => (a.sort < b.sort ? -1 : a.sort > b.sort ? 1 : 0));
+  if (rows.length) {
+    const act = $("activityList");
+    act.innerHTML = "";
+    for (const r of rows) {
+      const div = document.createElement("div");
+      div.className = "hist";
+      div.innerHTML = '<div class="hrow"><span class="hdate">' + r.date + '</span>' +
+        '<span class="hact">' + r.html + '</span></div>';
+      act.appendChild(div);
+    }
+    $("activityWrap").hidden = false;
+  }
+
+  /* Item 6: cumulative-score chart (inline SVG, no library). */
+  const chart = buildScoreChart(data);
+  if (chart) {
+    $("scoreChart").innerHTML = chart.svg;
+    $("scoreChartNote").textContent = chart.note;
+    $("scoreChartWrap").hidden = false;
+  }
+}
+
+/* Cumulative reputation over time: one point per dated history entry, in
+   file order (oldest first). Undated entries (Agent ID +100, date unknown)
+   form the baseline and are NOT plotted as a point — the caption says so. */
+function buildScoreChart(data) {
+  const entries = data.entries.filter((e) => e.date);
+  if (entries.length < 2) return null;
+  let cum = 0;
+  for (const e of data.entries) if (!e.date) cum += e.points;
+  const pts = [];
+  for (const e of entries) { cum += e.points; pts.push({ date: e.date, value: cum }); }
+  const first = pts[0].date, last = pts[pts.length - 1].date;
+  const t0 = new Date(first + "T00:00:00Z").getTime();
+  const t1 = new Date(last + "T00:00:00Z").getTime();
+  const span = Math.max(t1 - t0, 86400000);
+  const W = 600, H = 190, PL = 38, PR = 14, PT = 14, PB = 24;
+  const maxV = Math.max(400, Math.ceil(pts[pts.length - 1].value / 100) * 100);
+  const x = (d) => PL + ((new Date(d + "T00:00:00Z").getTime() - t0) / span) * (W - PL - PR);
+  const y = (v) => PT + (1 - v / maxV) * (H - PT - PB);
+  let grid = "";
+  for (let g = 0; g <= maxV; g += 100) {
+    grid += '<line class="gridline" x1="' + PL + '" y1="' + y(g) + '" x2="' + (W - PR) + '" y2="' + y(g) + '"/>' +
+      '<text x="' + (PL - 5) + '" y="' + (y(g) + 3) + '" text-anchor="end">' + g + '</text>';
+  }
+  const line = pts.map((p, i) => (i ? "L" : "M") + x(p.date).toFixed(1) + " " + y(p.value).toFixed(1)).join(" ");
+  const dots = pts.map((p) => '<circle class="dot" cx="' + x(p.date).toFixed(1) + '" cy="' + y(p.value).toFixed(1) + '" r="3"/>').join("");
+  const lastP = pts[pts.length - 1];
+  const labelX = Math.min(x(lastP.date) + 8, W - PR - 28);
+  const labelY = Math.max(y(lastP.value) - 8, PT + 4);
+  const svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" aria-label="Reputation score over time">' +
+    grid +
+    '<text x="' + PL + '" y="' + (H - 6) + '">' + fmtDate(first) + '</text>' +
+    '<text x="' + (W - PR) + '" y="' + (H - 6) + '" text-anchor="end">' + fmtDate(last) + '</text>' +
+    '<path class="line" d="' + line + '"/>' + dots +
+    '<text x="' + labelX + '" y="' + labelY + '" fill="#f5c542" font-weight="bold">' + lastP.value + '</text>' +
+    '</svg>';
+  return { svg, note: "Cumulative score after each recorded change, as of " + (data.generatedAt || "the history file") +
+    ". Agent ID +100 (date unknown) is included in the starting value, not plotted as a point." };
+}
+
+async function load(wallet) {
+  currentWallet = wallet;
+  $("status").textContent = "Reading on-chain data for " + shortAddr(wallet) + "\u2026";
+  $("viewBtn").disabled = true;
+  try {
+    const d = DEMO_MODE ? DEMO : await loadLive(wallet);
+    if (DEMO_MODE) { d.wallet = wallet; $("demoBanner").hidden = false; }
+    render(d);
+    loadHistory(wallet);
+    $("status").textContent = DEMO_MODE
+      ? "DEMO data — sample values for layout testing, not live on-chain data."
+      : "Profile loaded.";
+  } catch (e) {
+    $("status").textContent = "Could not read this wallet — RPC unavailable, try again.";
+  } finally {
+    $("viewBtn").disabled = false;
+  }
+}
+
+/* View profile: same action from the button and from Enter in the box. */
+function goToWallet() {
+  const v = $("addr").value.trim();
+  if (!isAddr(v)) { $("status").textContent = "That does not look like a wallet address (0x\u2026)."; return; }
+  const url = new URL(location.href);
+  url.searchParams.set("wallet", v);
+  if (DEMO_MODE) url.searchParams.set("demo", "1");
+  history.replaceState(null, "", url);
+  load(v);
+}
+
+$("viewBtn").addEventListener("click", goToWallet);
+$("addr").addEventListener("keydown", (ev) => {
+  if (ev.key === "Enter") { ev.preventDefault(); goToWallet(); }
+});
+
+/* Share: copy a link to this profile (?wallet=, no ?demo=) to the clipboard.
+   Falls back to a hidden textarea copy, then to selecting the URL in the
+   address box for manual copy. */
+$("shareBtn").addEventListener("click", async () => {
+  const url = new URL(location.href);
+  url.searchParams.set("wallet", currentWallet);
+  url.searchParams.delete("demo");
+  const link = url.toString();
+  const note = $("shareNote");
+  let copied = false;
+  try {
+    await navigator.clipboard.writeText(link);
+    copied = true;
+  } catch (e) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = link;
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      copied = document.execCommand("copy");
+      document.body.removeChild(ta);
+    } catch (e2) { copied = false; }
+  }
+  if (copied) {
+    note.textContent = "Link copied";
+  } else {
+    const input = $("addr");
+    input.value = link; input.focus(); input.select();
+    note.textContent = "Copy the link from the address box";
+  }
+  note.hidden = false;
+  setTimeout(() => { note.hidden = true; }, 3000);
+});
+
+(function init() {
+  buildAvatarGrid();
+  loadAvatarRegistry().then(() => { if (currentWallet) applyAvatar(currentWallet); });
+  /* Copy full wallet address (hero row). */
+  $("copyWalletBtn").addEventListener("click", async () => {
+    const btn = $("copyWalletBtn");
+    const ok = await copyText(currentWallet);
+    btn.textContent = ok ? "Copied" : "Copy failed";
+    setTimeout(() => { btn.textContent = "Copy"; }, 2000);
+  });
+  const w = params.get("wallet");
+  const wallet = w && isAddr(w) ? w : EXAMPLE_WALLET;
+  $("addr").value = wallet;
+  load(wallet);
+})();
+
+} /* end: ethers loaded */
+</script>
+</body>
+</html>

@@ -1,0 +1,973 @@
+{
+ "generated_at": "2026-11-27 01:13 WIB",
+ "generated_at_utc": "2026-11-26 18:13 UTC",
+ "catalog": "Agent ID Hub project catalog, generated 17 Nov 2026 (1,107 projects)",
+ "seed_analysis": "analisis-40-proyek-agent-id.md, 27 Nov 2026",
+ "counts": {
+  "ENDED": 9,
+  "ACTIVE": 19,
+  "UNVERIFIED": 1,
+  "DEAD": 9,
+  "RUGGED": 2
+ },
+ "projects": [
+  {
+   "rank": 1,
+   "id": "agent-id-aid",
+   "name": "AGENT ID ($AID)",
+   "category": "Fair launch",
+   "site": {
+    "url": "https://launch.bibiai.meme/project/0xf62b61c6e4fb9152bdc14a159d044e1a950c8130",
+    "status": "connection_error",
+    "http_code": null,
+    "checked_at": null
+   },
+   "onchain": {
+    "contract": "0xf62b61c6e4fb9152bdc14a159d044e1a950c8130",
+    "total_supply": null,
+    "display": "1,720 / 10,000 minted",
+    "checked_at": null,
+    "note": "totalSupply() reverts — contract has no standard supply getter"
+   },
+   "x_last_active": "2026-11-02",
+   "verdict": "ENDED",
+   "verdict_source": "seed",
+   "seed_verdict": "ENDED"
+  },
+  {
+   "rank": 2,
+   "id": "participation-passport",
+   "name": "Participation Passport",
+   "category": "Tool",
+   "site": {
+    "url": "https://agentidhub.eth.limo/passport.html",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "Agent ID registry (0x60b9...022f) — totalSupply() reverts by design; not checked"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 3,
+   "id": "stars-ai",
+   "name": "StarsAI",
+   "category": "Launchpad",
+   "site": {
+    "url": "https://starsagent.org/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0xf71832f4ed1839bdb8f8dbf43f3570b557218888",
+    "total_supply": 1000000000000000000000000000,
+    "display": "totalSupply 1,000,000,000 (÷10^18)",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 4,
+   "id": "ptah",
+   "name": "PTAH",
+   "category": "NFT + mining",
+   "site": {
+    "url": "https://ptah.trade/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0xb0d5f3108af164f5f7046f53ab59fd2779812d10",
+    "total_supply": null,
+    "display": "Relic 4,490",
+    "checked_at": null,
+    "note": "totalSupply() reverts — contract has no standard supply getter"
+   },
+   "x_last_active": "2026-11-09",
+   "verdict": "ENDED",
+   "verdict_source": "seed",
+   "seed_verdict": "ENDED"
+  },
+  {
+   "rank": 5,
+   "id": "binance-agentic-wallet",
+   "name": "Binance Agentic Wallet",
+   "category": "Tool",
+   "site": {
+    "url": "https://web3.binance.com/en/dev-docs/products/agentic-wallet",
+    "status": "ok",
+    "http_code": 202,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 6,
+   "id": "ngmi-wagmi",
+   "name": "ngmi → wagmi",
+   "category": "NFT art + mining",
+   "site": {
+    "url": "https://ngmiwagmi.art/mint",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0x84ABE26F2A66B16b2273986EabFA01ecc6E4b30f",
+    "total_supply": 264,
+    "display": "totalSupply 264",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": "2026-10-28",
+   "verdict": "ENDED",
+   "verdict_source": "seed",
+   "seed_verdict": "ENDED"
+  },
+  {
+   "rank": 7,
+   "id": "xuanwu-sigil",
+   "name": "Xuanwu Sigil",
+   "category": "NFT emblem",
+   "site": {
+    "url": "https://mint.mchain.art",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "≥2,916 minted",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 8,
+   "id": "xuanwu-seed",
+   "name": "Xuanwu Seed",
+   "category": "Consumable",
+   "site": {
+    "url": "https://seed.mchain.art/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0x05fd19702029c473683d6188cD856e59038278F4",
+    "total_supply": 9909,
+    "display": "totalSupply 9,909",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": null,
+   "verdict": "ENDED",
+   "verdict_source": "seed",
+   "seed_verdict": "ENDED"
+  },
+  {
+   "rank": 9,
+   "id": "skullaid",
+   "name": "Skullaid",
+   "category": "NFT",
+   "site": {
+    "url": "https://skullaid.site",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": "2026-10-26",
+   "verdict": "UNVERIFIED",
+   "verdict_source": "seed",
+   "seed_verdict": "UNVERIFIED"
+  },
+  {
+   "rank": 10,
+   "id": "erc-8004",
+   "name": "ERC-8004 Identity Registry",
+   "category": "Standard / infrastructure",
+   "site": {
+    "url": "https://eips.ethereum.org/EIPS/eip-8004",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "Registry address 0x8004... is on Ethereum, not BSC; not checked"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 11,
+   "id": "osbook",
+   "name": "osbook",
+   "category": "Community",
+   "site": {
+    "url": "https://www.osbookbnb.org/",
+    "status": "http_404",
+    "http_code": 404,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "DEAD",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 12,
+   "id": "agentpad",
+   "name": "AgentPad",
+   "category": "Launchpad",
+   "site": {
+    "url": "https://agentpad.trade/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0xD6AD76e8d502de733ab1eCEfC3E36C56Cb3071ba",
+    "total_supply": null,
+    "display": "APASS 6,064 / 10,000",
+    "checked_at": null,
+    "note": "totalSupply() reverts — contract has no standard supply getter"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 13,
+   "id": "gang",
+   "name": "Gang",
+   "category": "Launchpad",
+   "site": {
+    "url": "https://gang.fun/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0x315Ba2e8952D06094CC636b2B84229FA32fb23A7",
+    "total_supply": null,
+    "display": "509 agent buyers",
+    "checked_at": null,
+    "note": "totalSupply() reverts — contract has no standard supply getter"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 14,
+   "id": "agent-shaniu",
+   "name": "Agent Shaniu",
+   "category": "Meme claim",
+   "site": {
+    "url": "https://bn.shaniu.ai/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "5,068 claims",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 15,
+   "id": "agent-agt",
+   "name": "Agent / AGT",
+   "category": "Token mint",
+   "site": {
+    "url": "https://bscagentid.com/",
+    "status": "connection_error",
+    "http_code": null,
+    "checked_at": null
+   },
+   "onchain": {
+    "contract": "0x644849990Ea2E79eE5f6832c5E3cFF690aEcC686",
+    "total_supply": 13400000000000000000000000,
+    "display": "totalSupply 13,400,000 (÷10^18)",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": null,
+   "verdict": "ENDED",
+   "verdict_source": "seed",
+   "seed_verdict": "ENDED"
+  },
+  {
+   "rank": 16,
+   "id": "hashdroids",
+   "name": "HashDroids",
+   "category": "NFT PoW + game",
+   "site": {
+    "url": "https://hashdroids.fun/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "609 NFT",
+    "checked_at": null,
+    "note": "Catalog contract 0x0b9e... is the Pancake LP token (name 'Pancake LPs', symbol 'Cake-LP'), not the NFT — mint progress not checked on-chain"
+   },
+   "x_last_active": "2026-11-11",
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 17,
+   "id": "shit-cash",
+   "name": "Shit Cash",
+   "category": "Token sale",
+   "site": {
+    "url": "https://shit.cash/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "1,418 / 21,000 settled",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": "2026-10-23",
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 18,
+   "id": "ai-pad",
+   "name": ".AI Pad",
+   "category": "Launchpad",
+   "site": {
+    "url": "https://dottai.xyz/",
+    "status": "http_404",
+    "http_code": 404,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "4 coins created",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "RUGGED",
+   "verdict_source": "seed",
+   "seed_verdict": "RUGGED"
+  },
+  {
+   "rank": 19,
+   "id": "bibi",
+   "name": "Bibi NFT",
+   "category": "NFT + market",
+   "site": {
+    "url": "https://bibiai.fun/",
+    "status": "http_5xx",
+    "http_code": 525,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "4,444 / 4,444 sold out",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "RUGGED",
+   "verdict_source": "seed",
+   "seed_verdict": "RUGGED"
+  },
+  {
+   "rank": 20,
+   "id": "bai",
+   "name": "BAI",
+   "category": "Inscription",
+   "site": {
+    "url": "https://binanceai.site/",
+    "status": "ok",
+    "http_code": 202,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0x0952b47567e6eF2704D43ca8bcc2928e6108D8E7",
+    "total_supply": 21000000000000000000000000,
+    "display": "totalSupply 21,000,000 (÷10^18)",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": null,
+   "verdict": "ENDED",
+   "verdict_source": "seed",
+   "seed_verdict": "ENDED"
+  },
+  {
+   "rank": 21,
+   "id": "agentid-live",
+   "name": "AgentID Live",
+   "category": "Tool",
+   "site": {
+    "url": "https://agentidlive.ai/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "271,245 .ai registered",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 22,
+   "id": "bnb-fan",
+   "name": "bnb.fan",
+   "category": "Tool",
+   "site": {
+    "url": "https://bnb.fan/agent-id",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "268,353 registered",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 23,
+   "id": "xxlb",
+   "name": "XXLB",
+   "category": "Tool",
+   "site": {
+    "url": "https://aiagentid.vercel.app/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "271,368 names indexed",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 24,
+   "id": "agent-sigils",
+   "name": "Agent Sigils",
+   "category": "NFT",
+   "site": {
+    "url": "https://agent-sigils.netlify.app/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0xf865018A1638A36130cCc1C99732b536c0B4D1A7",
+    "total_supply": 142,
+    "display": "totalSupply 142",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": "2026-11-12",
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 25,
+   "id": "tape-readers",
+   "name": "Tape Readers",
+   "category": "NFT + market",
+   "site": {
+    "url": "https://tapereaders.netlify.app/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "221 / 2,000",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 26,
+   "id": "tagai",
+   "name": "TagAI / AIPRO",
+   "category": "Launchpad",
+   "site": {
+    "url": "https://tagai.fun/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0xfa81c13f979f0dff4a40b68c4aba147fa0723333",
+    "total_supply": 1000000000000000000000000000,
+    "display": "totalSupply 1,000,000,000 (÷10^18)",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 27,
+   "id": "gearz",
+   "name": "GEARZ",
+   "category": "Conditional funding",
+   "site": {
+    "url": "https://gearz.fun/contracts",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "922 / 50,000 (refund open)",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "ENDED",
+   "verdict_source": "seed",
+   "seed_verdict": "ENDED"
+  },
+  {
+   "rank": 28,
+   "id": "signal-ghosts",
+   "name": "Signal Ghosts",
+   "category": "NFT",
+   "site": {
+    "url": null,
+    "status": "no_site",
+    "http_code": null,
+    "checked_at": null
+   },
+   "onchain": {
+    "contract": "0xAbccd3Dfbb3b8e5c3EB6aE4De90AA22Db2286d1b",
+    "total_supply": 3333,
+    "display": "totalSupply 3,333",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": "2026-10-29",
+   "verdict": "ENDED",
+   "verdict_source": "seed",
+   "seed_verdict": "ENDED"
+  },
+  {
+   "rank": 29,
+   "id": "silicon-souls",
+   "name": "Silicon Souls",
+   "category": "NFT + grant",
+   "site": {
+    "url": null,
+    "status": "no_site",
+    "http_code": null,
+    "checked_at": null
+   },
+   "onchain": {
+    "contract": "0xA6574a66E45DeDFc878d173522836A49685ea307",
+    "total_supply": 89,
+    "display": "totalSupply 89",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 30,
+   "id": "agentcity",
+   "name": "AgentCity",
+   "category": "City cards",
+   "site": {
+    "url": "https://agentcity.pages.dev/",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:12 WIB"
+   },
+   "onchain": {
+    "contract": "0x04a9F5a5f6409DAd7eD9eC54bBACF89663651cD7",
+    "total_supply": 68,
+    "display": "totalSupply 68",
+    "checked_at": "2026-11-27 01:13 WIB",
+    "note": null
+   },
+   "x_last_active": null,
+   "verdict": "ENDED",
+   "verdict_source": "seed",
+   "seed_verdict": "ENDED"
+  },
+  {
+   "rank": 31,
+   "id": "agent-1000",
+   "name": "AGENT/1000",
+   "category": "NFT robot",
+   "site": {
+    "url": "https://agent-worker.trade/",
+    "status": "connection_error",
+    "http_code": null,
+    "checked_at": null
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "15 / 1,000",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "DEAD",
+   "verdict_source": "seed",
+   "seed_verdict": "DEAD"
+  },
+  {
+   "rank": 32,
+   "id": "minted-by-agents",
+   "name": "Minted by Agents",
+   "category": "NFT",
+   "site": {
+    "url": "https://mintedbyagents.xyz",
+    "status": "connection_error",
+    "http_code": null,
+    "checked_at": null
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "160 / 5,555",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "DEAD",
+   "verdict_source": "seed",
+   "seed_verdict": "DEAD"
+  },
+  {
+   "rank": 33,
+   "id": "yap-to-mint",
+   "name": "Yap to Mint",
+   "category": "Game",
+   "site": {
+    "url": "https://yaptomint.xyz/mint",
+    "status": "connection_error",
+    "http_code": null,
+    "checked_at": null
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "DEAD",
+   "verdict_source": "seed",
+   "seed_verdict": "DEAD"
+  },
+  {
+   "rank": 34,
+   "id": "scarab-key",
+   "name": "SCARAB Key",
+   "category": "Lottery claim",
+   "site": {
+    "url": "https://scarabkey.netlify.app",
+    "status": "ok",
+    "http_code": 200,
+    "checked_at": "2026-11-27 01:13 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 35,
+   "id": "agentpunks",
+   "name": "AgentPunks",
+   "category": "NFT",
+   "site": {
+    "url": "https://gridpunks-vert.vercel.app/",
+    "status": "http_404",
+    "http_code": 404,
+    "checked_at": "2026-11-27 01:13 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "DEAD",
+   "verdict_source": "seed",
+   "seed_verdict": "DEAD"
+  },
+  {
+   "rank": 36,
+   "id": "alibaba-cbox",
+   "name": "Alibaba & The 70 Thieves (CBOX)",
+   "category": "NFT",
+   "site": {
+    "url": "https://8000-agqwonabb5miyfdf3pgbwfi7x4.instabox.tech/",
+    "status": "http_404",
+    "http_code": 404,
+    "checked_at": "2026-11-27 01:13 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "6,028 / 10,000",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "DEAD",
+   "verdict_source": "seed",
+   "seed_verdict": "DEAD"
+  },
+  {
+   "rank": 37,
+   "id": "orvyn",
+   "name": "ORVYN",
+   "category": "NFT",
+   "site": {
+    "url": "https://orvynmint.site/",
+    "status": "http_404",
+    "http_code": 404,
+    "checked_at": "2026-11-27 01:13 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "DEAD",
+   "verdict_source": "seed",
+   "seed_verdict": "DEAD"
+  },
+  {
+   "rank": 38,
+   "id": "four-meme",
+   "name": "Four.meme OpenFour",
+   "category": "Launchpad mode",
+   "site": {
+    "url": "https://four.meme",
+    "status": "blocked",
+    "http_code": 403,
+    "checked_at": "2026-11-27 01:13 WIB"
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": "200+ tokens / 6 graduated",
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": "2026-11-12",
+   "verdict": "ACTIVE",
+   "verdict_source": "seed",
+   "seed_verdict": "ACTIVE"
+  },
+  {
+   "rank": 39,
+   "id": "aivy",
+   "name": "AIVY",
+   "category": "NFT + mining",
+   "site": {
+    "url": "https://aivy.me/",
+    "status": "connection_error",
+    "http_code": null,
+    "checked_at": null
+   },
+   "onchain": {
+    "contract": "0x77cCE940d1Fe4808aB6cf8484d45d8B51139E7D6",
+    "total_supply": null,
+    "display": "7,377 / 7,777",
+    "checked_at": null,
+    "note": "totalSupply() reverts — contract has no standard supply getter"
+   },
+   "x_last_active": null,
+   "verdict": "DEAD",
+   "verdict_source": "seed",
+   "seed_verdict": "DEAD"
+  },
+  {
+   "rank": 40,
+   "id": "mercatura-vlad",
+   "name": "Mercatura Vlad",
+   "category": "Investment account",
+   "site": {
+    "url": "https://mercatura.network/vlad",
+    "status": "connection_error",
+    "http_code": null,
+    "checked_at": null
+   },
+   "onchain": {
+    "contract": null,
+    "total_supply": null,
+    "display": null,
+    "checked_at": null,
+    "note": "no contract known"
+   },
+   "x_last_active": null,
+   "verdict": "DEAD",
+   "verdict_source": "seed",
+   "seed_verdict": "DEAD"
+  }
+ ],
+ "extra_watched": [
+  {
+   "id": "agentquest",
+   "name": "AgentQuest",
+   "note": "Soulbound achievement badges",
+   "contract": "0x26ad277193ff31bd086a47bf7b1d25a93573c989",
+   "display": "1,080 badges minted",
+   "checked_at": "2026-11-27 01:13 WIB",
+   "live_note": null
+  },
+  {
+   "id": "quest-sparks",
+   "name": "Quest Sparks",
+   "note": "Animated on-chain NFT, free 1/wallet for badge holders",
+   "contract": "0x20ef401acddb836e3576aade51f620f6a99631cb",
+   "display": "5 / 3,333 minted",
+   "checked_at": "2026-11-27 01:13 WIB",
+   "live_note": null
+  },
+  {
+   "id": "symphony",
+   "name": "SYMPHONY ($OPUS)",
+   "note": "Perk Partner #1 — fair launch, Prelude + Soundcheck",
+   "contract": null,
+   "display": "Prelude 209 / 500 registrants (24 Nov 2026); Soundcheck streak 5 (26 Nov 2026); sale 12–30 Dec 2026",
+   "checked_at": "2026-11-26",
+   "live_note": null
+  },
+  {
+   "id": "jajal-agent",
+   "name": "jajal.agent ($JAL)",
+   "note": "Perk Partner #2 — fair launch, free shares FCFS",
+   "contract": null,
+   "display": "269 / 10,000 shares claimed, 731 free shares left (26 Nov 2026 ~23:07 WIB); sale closes 5 Dec 2026",
+   "checked_at": "2026-11-26",
+   "live_note": null
+  }
+ ]
+}

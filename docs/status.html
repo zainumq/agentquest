@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="AgentQuest project status board — which Binance Agent ID projects are still alive, ended, rugged, or dead. Checked live: official site + on-chain supply." />
+  <meta property="og:title" content="AgentQuest — Agent ID Project Status Board" />
+  <meta property="og:description" content="Live status of the top 40 Agent ID Hub projects: site, last X activity, and on-chain supply." />
+  <title>AgentQuest — Agent ID Project Status Board</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem; }
+    .status-count { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.85rem 1rem; }
+    .status-count .num { font-size: 1.5rem; font-weight: 700; margin: 0; }
+    .status-count .lbl { color: var(--muted); font-size: 0.85rem; margin: 0.15rem 0 0; }
+    .v-active { color: var(--green); } .v-ended { color: var(--amber); }
+    .v-dead { color: var(--red); } .v-rugged { color: #f97316; }
+    .v-unverified { color: var(--muted); }
+    .status-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .status-table th, .status-table td { text-align: left; padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .status-table th { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .status-table td .sub { display: block; color: var(--faint); font-size: 0.8rem; margin-top: 0.15rem; }
+    .status-table tr.row-ACTIVE td:first-child { border-left: 3px solid var(--green); }
+    .status-table tr.row-ENDED td:first-child { border-left: 3px solid var(--amber); }
+    .status-table tr.row-DEAD td:first-child { border-left: 3px solid var(--red); }
+    .status-table tr.row-RUGGED td:first-child { border-left: 3px solid #f97316; }
+    .status-table tr.row-UNVERIFIED td:first-child { border-left: 3px solid var(--muted); }
+    .verdict { font-weight: 700; font-size: 0.85rem; white-space: nowrap; }
+    .legend { display: flex; gap: 1rem; flex-wrap: wrap; color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
+    .legend b { font-weight: 700; }
+    /* Top nav (v3): same 7 items as profile/discover. */
+    .topnav { display: flex; justify-content: space-between; align-items: center; gap: 8px 18px; flex-wrap: wrap; padding: 2px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .topnav .brand { color: #2dd4bf; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none; }
+    .topnav nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    .topnav nav a { color: var(--muted); font-size: 14px; text-decoration: none; }
+    .topnav nav a:hover { color: var(--text); }
+    .topnav nav a.active { color: #2dd4bf; font-weight: 700; border-bottom: 2px solid #2dd4bf; padding-bottom: 2px; }
+    .topnav nav a .soon { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--amber); border: 1px solid var(--amber); border-radius: 999px; padding: 1px 6px; margin-left: 2px; white-space: nowrap; }
+    @media (max-width: 560px) { .topnav nav { gap: 12px; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">AQ</span>
+        <div>
+          <h1>Agent ID Project Status Board</h1>
+          <p class="brand-sub">Which Agent ID projects are still alive — checked live, not from memory</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a class="btn btn-small" href="./index.html">← Back to AgentQuest</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <header class="topnav">
+      <a class="brand" href="./index.html">AgentQuest</a>
+      <nav>
+        <a href="./index.html">Home</a>
+        <a href="./discover.html">Explore Agents</a>
+        <a href="./quests.html">Quests <span class="soon">Soon</span></a>
+        <a href="./leaderboard.html">Leaderboard <span class="soon">Soon</span></a>
+        <a href="./profile.html">My Profile</a>
+        <a href="./docs.html">Docs <span class="soon">Soon</span></a>
+        <a href="./status.html" class="active" aria-current="page">Status</a>
+      </nav>
+    </header>
+
+    <section aria-label="About this board">
+      <p class="intro">
+        The Agent ID Hub catalog is a snapshot — generated 17 Nov 2026, and it
+        does not move. Projects die quietly: their X goes silent, their site
+        goes down, their mint stops — and nobody announces it. This board
+        re-checks the top 40 Hub projects: the official site (does it load?)
+        and the contract on BNB Chain (does supply still move?).
+      </p>
+      <p class="section-note">
+        Last updated: <strong id="updated">loading…</strong>
+        <span id="updated-note" class="card-note"></span>
+      </p>
+      <div id="counts" class="status-grid"></div>
+      <div class="legend">
+        <span><b class="v-active">ACTIVE</b> — site loads, project alive</span>
+        <span><b class="v-ended">ENDED</b> — mint closed / sold out / window passed</span>
+        <span><b class="v-dead">DEAD</b> — site gone and team silent</span>
+        <span><b class="v-rugged">RUGGED</b> — site and X vanished</span>
+        <span><b class="v-unverified">UNVERIFIED</b> — not enough evidence either way</span>
+      </div>
+      <p class="card-note">
+        Status is the result of automatic checks plus manual review — it is
+        not financial advice. A project marked ACTIVE can still fail, and a
+        DEAD one can come back. X activity is updated by hand, not scraped.
+        Data: <span id="sources">Agent ID Hub catalog (17 Nov 2026) + on-chain checks.</span>
+      </p>
+      <p class="card-note">
+        How verdicts are decided: each verdict is our own analyst judgment
+        from our 27 Nov 2026 review of the top 40 Hub projects, combined
+        with the live checks on this page (official site + on-chain
+        totalSupply, with the check time shown on every row). It is our
+        opinion, not an official accusation and not financial advice.
+        Think a verdict is wrong? Tell us on The Colony or X
+        @fer_rodrigues06 &mdash; corrections within 24h.
+      </p>
+    </section>
+
+    <section aria-label="Project table">
+      <div class="section-head">
+        <h2>Top 40 Hub projects</h2>
+        <span id="table-pill" class="pill pill-muted">Loading…</span>
+      </div>
+      <div class="table-scroll">
+        <table class="status-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Project</th>
+              <th>Category</th>
+              <th>Site</th>
+              <th>X last active</th>
+              <th>On-chain</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="status-body">
+            <tr><td colspan="7" class="empty-note">Loading status…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-label="Also watched">
+      <div class="section-head">
+        <h2>Also watched (outside the Hub catalog)</h2>
+      </div>
+      <p class="section-note">
+        Projects newer than the 17 Nov catalog snapshot — including our own —
+        tracked the same way.
+      </p>
+      <div id="extra-grid" class="card-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>
+        AgentQuest — built for the Binance Agent ID Hackathon (submission closes
+        9 Dec 2026).
+      </p>
+      <p class="footer-note">
+        Status data is refreshed by an automated checker (site + on-chain only).
+        Nothing here is investment advice, and nothing here promises any return.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+    const shortAddr = (a) => a ? a.slice(0, 6) + "…" + a.slice(-4) : "";
+    const domainOf = (u) => { try { return new URL(u).hostname; } catch { return u; } };
+
+    const VERDICT_CLASS = {
+      ACTIVE: "v-active", ENDED: "v-ended", DEAD: "v-dead",
+      RUGGED: "v-rugged", UNVERIFIED: "v-unverified"
+    };
+
+    function siteCell(site) {
+      if (!site || !site.url) return '<span class="empty-note">No site known</span>';
+      const link = '<a href="' + esc(site.url) + '" target="_blank" rel="noopener">' + esc(domainOf(site.url)) + "</a>";
+      let sub = "";
+      if (site.status === "ok") sub = "HTTP " + (site.http_code ?? 200);
+      else if (site.status === "blocked") sub = "blocked (HTTP " + site.http_code + ")";
+      else if (site.status === "http_5xx") sub = "server error (HTTP " + site.http_code + ")";
+      else if (site.status === "http_404" || site.status === "http_410") sub = "not found (HTTP " + site.http_code + ")";
+      else if (site.status === "dns_error") sub = "domain does not resolve";
+      else if (site.status === "timeout") sub = "timed out";
+      else if (site.status === "connection_error") sub = "unreachable";
+      else if (site.status === "no_site") sub = "";
+      else sub = esc(site.status);
+      if (site.checked_at) sub += " · " + esc(site.checked_at);
+      return link + (sub ? '<span class="sub">' + esc(sub) + "</span>" : "");
+    }
+
+    function onchainCell(oc) {
+      if (!oc) return '<span class="empty-note">unknown</span>';
+      let main = oc.display ? esc(oc.display) : '<span class="empty-note">unknown</span>';
+      let sub = "";
+      if (oc.contract) {
+        sub = '<a class="mono" href="https://bscscan.com/address/' + esc(oc.contract) + '" target="_blank" rel="noopener">' + esc(shortAddr(oc.contract)) + "</a>";
+      }
+      if (oc.note) sub += (sub ? " · " : "") + esc(oc.note);
+      if (oc.checked_at) sub += (sub ? " · " : "") + esc(oc.checked_at);
+      return main + (sub ? '<span class="sub">' + sub + "</span>" : "");
+    }
+
+    async function load() {
+      const res = await fetch("status.json");
+      if (!res.ok) throw new Error("status.json HTTP " + res.status);
+      const data = await res.json();
+
+      document.getElementById("updated").textContent = data.generated_at || "unknown";
+      document.getElementById("sources").textContent =
+        (data.catalog || "") + (data.seed_analysis ? " · Seed analysis: " + data.seed_analysis + "." : "");
+
+      const order = ["ACTIVE", "ENDED", "DEAD", "RUGGED", "UNVERIFIED"];
+      document.getElementById("counts").innerHTML = order.map((v) => {
+        const n = (data.counts && data.counts[v]) || 0;
+        return '<div class="status-count"><p class="num ' + VERDICT_CLASS[v] + '">' + n + '</p><p class="lbl">' + v.toLowerCase() + "</p></div>";
+      }).join("");
+
+      const rows = (data.projects || []).map((p) => {
+        const x = p.x_last_active ? esc(p.x_last_active) : '<span class="empty-note">unknown</span>';
+        return '<tr class="row-' + esc(p.verdict) + '">' +
+          "<td>" + esc(p.rank) + "</td>" +
+          "<td><strong>" + esc(p.name) + "</strong></td>" +
+          "<td>" + esc(p.category) + "</td>" +
+          "<td>" + siteCell(p.site) + "</td>" +
+          "<td>" + x + "</td>" +
+          "<td>" + onchainCell(p.onchain) + "</td>" +
+          '<td><span class="verdict ' + VERDICT_CLASS[p.verdict] + '">' + esc(p.verdict) + "</span></td>" +
+          "</tr>";
+      }).join("");
+      document.getElementById("status-body").innerHTML = rows;
+      document.getElementById("table-pill").textContent = (data.projects || []).length + " projects";
+
+      document.getElementById("extra-grid").innerHTML = (data.extra_watched || []).map((e) => {
+        const contract = e.contract
+          ? '<p class="card-note"><a class="mono" href="https://bscscan.com/address/' + esc(e.contract) + '" target="_blank" rel="noopener">' + esc(shortAddr(e.contract)) + "</a></p>"
+          : "";
+        return '<div class="card"><h2>' + esc(e.name) + "</h2>" +
+          '<p class="big-status">' + esc(e.display) + "</p>" +
+          '<p class="card-note">' + esc(e.note || "") + "</p>" +
+          '<p class="card-note">Checked: ' + esc(e.checked_at || "unknown") + "</p>" +
+          contract + "</div>";
+      }).join("");
+    }
+
+    load().catch((err) => {
+      document.getElementById("status-body").innerHTML =
+        '<tr><td colspan="7" class="empty-note">Could not load status.json (' + esc(err.message) + "). The board updates hourly.</td></tr>";
+      document.getElementById("table-pill").textContent = "data unavailable";
+    });
+  </script>
+</body>
+</html>

@@ -11,6 +11,17 @@
   <meta name="twitter:card" content="summary_large_image" />
   <title>AgentQuest — Achievement Badges for Agent ID Holders</title>
   <link rel="stylesheet" href="./styles.css" />
+  <style>
+    /* Top nav (v3): same 7 items as profile/discover. */
+    .topnav { display: flex; justify-content: space-between; align-items: center; gap: 8px 18px; flex-wrap: wrap; padding: 2px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .topnav .brand { color: #2dd4bf; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none; }
+    .topnav nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    .topnav nav a { color: var(--muted); font-size: 14px; text-decoration: none; }
+    .topnav nav a:hover { color: var(--text); }
+    .topnav nav a.active { color: #2dd4bf; font-weight: 700; border-bottom: 2px solid #2dd4bf; padding-bottom: 2px; }
+    .topnav nav a .soon { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--amber); border: 1px solid var(--amber); border-radius: 999px; padding: 1px 6px; margin-left: 2px; white-space: nowrap; }
+    @media (max-width: 560px) { .topnav nav { gap: 12px; } }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -31,6 +42,19 @@
   </header>
 
   <main class="wrap">
+    <header class="topnav">
+      <a class="brand" href="./index.html">AgentQuest</a>
+      <nav>
+        <a href="./index.html" class="active" aria-current="page">Home</a>
+        <a href="./discover.html">Explore Agents</a>
+        <a href="./quests.html">Quests <span class="soon">Soon</span></a>
+        <a href="./leaderboard.html">Leaderboard <span class="soon">Soon</span></a>
+        <a href="./profile.html">My Profile</a>
+        <a href="./docs.html">Docs <span class="soon">Soon</span></a>
+        <a href="./status.html">Status</a>
+      </nav>
+    </header>
+
     <div id="deploy-banner" class="banner banner-warn" hidden>
       <strong>Contract not deployed yet.</strong>
       <span>The AgentQuest contract has not been deployed to BNB Chain, so quest
@@ -62,7 +86,7 @@
       </div>
       <p class="section-note">
         Check in once a day to build a streak. Each check-in is one
-        transaction, gas only (about Rp100), value 0 — no approval, no fee.
+        transaction, gas only, value 0 — no approval, no fee.
         Streaks of 3, 7, 14 and 30 days auto-mint soulbound milestone badges,
         and your total check-ins count toward a share of a 3,000,000 KONG
         pool at $KONG graduation.
