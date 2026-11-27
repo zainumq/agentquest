@@ -11,7 +11,7 @@ Built for the **Binance Agent ID Hackathon** (Nov–Dec 2026).
 - **Live app:** https://zainumq.github.io/agentquest/
 - **Contract (BNB Chain):** [`0x26ad277193ff31bd086a47bf7b1d25a93573c989`](https://bscscan.com/address/0x26ad277193ff31bd086a47bf7b1d25a93573c989)
 - **Source:** verified on [BscScan](https://bscscan.com/address/0x26ad277193ff31bd086a47bf7b1d25a93573c989#code) and [Sourcify](https://sourcify.dev/#/lookup/0x26ad277193ff31bd086a47bf7b1d25a93573c989) (exact match)
-- **Status:** live on BNB Smart Chain mainnet since 18 Nov 2026 — 1,088 badges minted to 522 holders as of 27 Nov 2026.
+- **Status:** live on BNB Smart Chain mainnet since 18 Nov 2026 — live traction on the [status board](https://zainumq.github.io/agentquest/status.html).
 
 ## The problem
 
@@ -148,7 +148,7 @@ designed, not a bug.
 
 Reviewers can inspect a real profile without connecting anything:
 
-- **Demo profile:** [kingkoung.ai — score 337/1,000 (Silver), 4 badges, 9-day streak](https://zainumq.github.io/agentquest/profile.html?wallet=0x0a90F878E4CF3EF3BC0Ee4a67e2FF0166986ad5F)
+- **Demo profile:** kingkoung.ai — score 337/1,000 (Silver), 4 badges — live streak and score on the [profile](https://zainumq.github.io/agentquest/profile.html?wallet=0x0a90F878E4CF3EF3BC0Ee4a67e2FF0166986ad5F)
 - Any wallet can be viewed the same way:
   `profile.html?wallet=<address>`
 
@@ -180,8 +180,7 @@ The badge contract itself was deployed 18 Nov 2026 20:56 WIB —
 [deploy tx `0x6e93e640…e9cf`](https://bscscan.com/tx/0x6e93e640c613c427143181e18da912683939cec9621b65dbc5031cae54c9e9cf)
 (block 134323139).
 
-**Traction (live on-chain read, 27 Nov 2026): 1,088 badges minted to 522
-unique holders.**
+**Traction:** live on the [status board](https://zainumq.github.io/agentquest/status.html) (badges and holders, read on-chain).
 
 ## How Binance Agent ID is integrated
 

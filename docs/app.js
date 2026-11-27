@@ -292,7 +292,7 @@ async function refreshAll() {
     renderHeld();
     renderQuests();
     renderStreak();
-    renderBadgesEmpty("The contract is not deployed yet — no badges exist.");
+    renderBadgesEmpty("No badges found for this wallet yet.");
     return;
   }
 
@@ -535,10 +535,10 @@ function renderStreak() {
   }
 
   if (!isDeployed) {
-    pill.textContent = "Not deployed yet";
+    pill.textContent = "Unavailable";
     pill.className = "pill pill-muted";
     setUnknown();
-    statusEl.textContent = "Available after the contract is deployed.";
+    statusEl.textContent = "Badge data is unavailable right now — please refresh and try again.";
     btn.disabled = true;
     btn.hidden = false;
     noBadge.hidden = true;
@@ -814,7 +814,7 @@ function renderLeaderboard() {
 
 function questState(quest) {
   if (!account) return { label: "Connect wallet", pill: "pill-muted", canClaim: false };
-  if (!isDeployed) return { label: "Not deployed yet", pill: "pill-muted", canClaim: false };
+  if (!isDeployed) return { label: "Unavailable", pill: "pill-muted", canClaim: false };
   const s = status.quests[quest.id];
   if (s.claimed) return { label: "✓ Claimed", pill: "pill-ok", canClaim: false };
   if (status.hasAgentId === false) {
@@ -1124,7 +1124,7 @@ async function renderBadges() {
     renderBadgesEmpty(
       !account
         ? "Connect your wallet to see your badges."
-        : "The contract is not deployed yet — no badges exist."
+        : "Badge data is unavailable right now."
     );
     return;
   }
@@ -1277,7 +1277,7 @@ function renderContractInfo() {
     linkEl.href = `${BSCSCAN_BASE}/address/${CONTRACT_ADDRESS}`;
     linkEl.hidden = false;
   } else {
-    addrEl.textContent = "not deployed yet";
+    addrEl.textContent = "—";
     linkEl.hidden = true;
   }
 }

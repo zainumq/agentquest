@@ -14,7 +14,7 @@ Contract: `AgentQuest Badge` / `AQBADGE`.
 - ✅ Contract: [`0x26ad277193ff31bd086a47bf7b1d25a93573c989`](https://bscscan.com/address/0x26ad277193ff31bd086a47bf7b1d25a93573c989) — source verified on [BscScan](https://bscscan.com/address/0x26ad277193ff31bd086a47bf7b1d25a93573c989#code) and [Sourcify](https://sourcify.dev/#/lookup/0x26ad277193ff31bd086a47bf7b1d25a93573c989) (exact match, 18 Nov 2026).
 - ✅ Deploy tx: [`0x6e93e640c613c427143181e18da912683939cec9621b65dbc5031cae54c9e9cf`](https://bscscan.com/tx/0x6e93e640c613c427143181e18da912683939cec9621b65dbc5031cae54c9e9cf) (block 134323139, deployer Account 16 `0xed1A29F81a61029089Ad8D641670baD47bDced3A`, 2,677,314 gas).
 - ✅ Live app: https://zainumq.github.io/agentquest/
-- ✅ 1,088 badges minted / 522 holders (27 Nov 2026, live on-chain read).
+- ✅ Traction: live on the [status board](https://zainumq.github.io/agentquest/status.html) (badges and holders, read on-chain).
 - ✅ Contract written, **31/31 forge tests pass** (incl. 1 fuzz test, 256 runs).
 - ✅ Deploy script validated end-to-end on a local anvil chain before the mainnet deploy.
 
