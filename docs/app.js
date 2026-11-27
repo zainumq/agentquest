@@ -1279,7 +1279,6 @@ function renderContractInfo() {
   } else {
     addrEl.textContent = "not deployed yet";
     linkEl.hidden = true;
-    $("deploy-banner").hidden = false;
   }
 }
 

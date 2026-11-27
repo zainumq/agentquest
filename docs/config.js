@@ -1,11 +1,8 @@
 // AgentQuest frontend configuration.
 //
-// The ONLY value that must change after the contract is deployed is
-// CONTRACT_ADDRESS below. Everything else is already final.
-
-// TODO(after deploy): replace with the deployed AgentQuest contract address.
-// Until then the app runs in "not deployed yet" mode: the Agent ID status
-// check still works, but quest eligibility and claims stay disabled.
+// Deployed 18 Nov 2026 20:56 WIB to BNB Smart Chain mainnet.
+// CONTRACT_ADDRESS below is the live AgentQuest contract.
+// Everything else in this file is final.
 export const CONTRACT_ADDRESS = "0x26ad277193ff31bd086a47bf7b1d25a93573c989";
 
 // Canonical SPACE ID Agent ID registry on BNB Chain (verified in the
