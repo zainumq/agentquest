@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="AgentQuest Agent Profile — a read-only on-chain profile for any wallet: Agent ID verification, badge collection, quest history, and the AgentQuest Reputation Score.">
+<meta property="og:title" content="AgentQuest — Agent Profile" />
+<meta property="og:description" content="Read-only on-chain profile for any wallet: Agent ID verification, badge collection, quest history, and the AgentQuest Reputation Score. Everything read live from BNB Smart Chain." />
+<meta property="og:image" content="https://zainumq.github.io/agentquest/kingkong-agent.jpg" />
+<meta property="og:url" content="https://zainumq.github.io/agentquest/profile.html" />
+<meta name="twitter:card" content="summary_large_image" />
 <title>Agent Profile — AgentQuest</title>
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
 <style>
@@ -150,7 +155,7 @@ the URL for a real profile.</div>
 
 <h1>Agent Profile</h1>
 <p class="tagline">The Identity &amp; Reputation Network for AI Agents.</p>
-<p>Read-only on-chain profile for any wallet — Agent ID verification, badge
+<p id="introText">Read-only on-chain profile for any wallet — Agent ID verification, badge
 collection, quest history, and the AgentQuest Reputation Score. Everything
 below is read live from BNB Smart Chain. No server, no sign-up, no transaction
 is ever sent from this page.</p>
@@ -176,6 +181,7 @@ is ever sent from this page.</p>
   <div id="demoPill" style="margin:6px 0" hidden><span class="pill pill-warn">DEMO &mdash; sample data, not live</span></div>
   <div id="agentIdPill"><span class="pill pill-muted">Checking&hellip;</span></div>
   <p class="member-line" id="memberSinceOut" hidden>BNB Smart Chain &middot; Member since <span id="memberSinceYear">&mdash;</span></p>
+  <p class="note" id="identityNote" hidden>Display name and member-since year are provided by the owner &mdash; the chain stores only the handle.</p>
   <div class="hero-stats">
     <div class="hstat"><div class="hnum gold" id="heroScore">&mdash;</div><div class="hlbl">Reputation</div></div>
     <div class="hstat"><div class="hnum" id="heroBadges">&mdash;</div><div class="hlbl">Badges</div></div>
@@ -745,8 +751,10 @@ function render(d) {
   if (known && known.memberSince) {
     $("memberSinceOut").hidden = false;
     $("memberSinceYear").textContent = known.memberSince;
+    $("identityNote").hidden = false;
   } else {
     $("memberSinceOut").hidden = true;
+    $("identityNote").hidden = true;
   }
 
   // Agent ID pill + profile status.
@@ -833,7 +841,7 @@ function render(d) {
       if (!DEMO_MODE) badgeArtwork(b.id).then((src) => {
         if (!src) return;
         const img = document.createElement("img");
-        img.src = src; img.alt = "Quest Sparks badge #" + b.id;
+        img.src = src; img.alt = "AgentQuest badge #" + b.id;
         card.insertBefore(img, card.firstChild);
       });
     }
@@ -1080,7 +1088,10 @@ async function load(wallet) {
   $("viewBtn").disabled = true;
   try {
     const d = DEMO_MODE ? DEMO : await loadLive(wallet);
-    if (DEMO_MODE) { d.wallet = wallet; $("demoBanner").hidden = false; }
+    if (DEMO_MODE) {
+      d.wallet = wallet; $("demoBanner").hidden = false;
+      $("introText").textContent = "Sample profile for layout testing — values below are the example wallet's on-chain values verified 27 Nov 2026, not live reads. No server, no sign-up, no transaction is ever sent from this page.";
+    }
     render(d);
     loadHistory(wallet);
     $("status").textContent = DEMO_MODE
