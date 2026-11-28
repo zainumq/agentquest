@@ -56,6 +56,23 @@
   .foot { margin-top: 14px; font-size: 11.5px; color: #64748b; line-height: 1.5; text-align: center; }
   .foot code { color: #64748b; word-break: break-all; }
   .loading { color: #94a3b8; font-size: 13px; padding: 12px 0; }
+  .search { background: #111c33; border: 1px solid #1e2d4d; border-radius: 14px; padding: 14px; margin-top: 18px; }
+  .search h2 { margin: 0 0 4px; }
+  .search p { color: #94a3b8; font-size: 12.5px; line-height: 1.5; margin-bottom: 10px; }
+  .search-row { display: flex; gap: 8px; }
+  .search-row input { flex: 1; min-width: 0; padding: 11px 12px; border-radius: 10px; border: 1px solid #33415e; background: #16224d; color: #fff; font-size: 14px; }
+  .search-row button { background: #e8b84b; color: #0a1128; font-weight: 700; border: 0; border-radius: 10px; padding: 11px 16px; font-size: 14px; cursor: pointer; }
+  .search-row button:disabled { opacity: .5; cursor: default; }
+  .search-result { margin-top: 12px; }
+  .search-msg { color: #94a3b8; font-size: 13px; margin-top: 12px; line-height: 1.5; }
+  .search-msg a { color: #2dd4bf; }
+  .result-card { background: #16224d; border: 1px solid #1e2d4d; border-radius: 14px; overflow: hidden; }
+  .result-card .art { aspect-ratio: 1; }
+  .result-card .art svg { display: block; width: 100%; height: 100%; }
+  .result-card .meta { padding: 12px 14px; }
+  .result-card .meta b { display: block; color: #fff; font-size: 15px; margin-bottom: 2px; }
+  .result-card .meta span { color: #94a3b8; font-size: 12.5px; word-break: break-all; }
+  .result-card .meta a { color: #2dd4bf; font-size: 12.5px; text-decoration: none; }
   .demobanner { display: none; background: #451a03; border: 1px solid #b45309; color: #fcd34d; font-size: 12px; border-radius: 10px; padding: 8px 12px; margin-bottom: 14px; line-height: 1.5; }
 </style>
 </head>
@@ -74,6 +91,16 @@
     <div class="stat common"><b id="statCommon">&mdash;</b><span>Common &middot; 70%</span></div>
   </div>
   <p class="diff" id="diffLine">Difficulty &hellip;</p>
+
+  <div class="search">
+    <h2>Cari Sparks kamu</h2>
+    <p>Tempel alamat wallet (0x&hellip;) untuk melihat semua Sparks milik wallet itu, atau ketik nomor token (mis. 180).</p>
+    <div class="search-row">
+      <input id="searchInput" type="text" placeholder="0x… atau nomor token" spellcheck="false" autocomplete="off">
+      <button id="searchBtn" type="button">Cari</button>
+    </div>
+    <div class="search-result" id="searchResult"></div>
+  </div>
 
   <h2>&#10022; Mint pertama</h2>
   <div class="featured">
@@ -107,9 +134,12 @@ const LATEST_COUNT = 12;
 const ABI = [
   "function totalMinted() view returns (uint256)",
   "function difficultyBits() view returns (uint8)",
+  "function balanceOf(address) view returns (uint256)",
   "function ownerOf(uint256) view returns (address)",
   "function tokenURI(uint256) view returns (string)"
 ];
+const MULTICALL3 = "0xcA11bde05977b3631167028862bE2a173976CA11";
+const MC3_ABI = ["function aggregate3(tuple(address target, bool allowFailure, bytes callData)[] calls) view returns (tuple(bool success, bytes returnData)[])"];
 const params = new URLSearchParams(location.search);
 const DEMO = params.get("demo") === "1";
 
@@ -140,6 +170,7 @@ function svgFromTokenURI(uri) {
 function fmt(n) { return n.toLocaleString("id-ID"); }
 
 function renderStats(total, difficulty) {
+  currentTotal = total;
   const c = variantCounts(total);
   document.getElementById("totalLine").textContent = fmt(total) + " dari 3.333.";
   document.getElementById("statMinted").textContent = fmt(total);
@@ -198,6 +229,7 @@ async function providerWithFallback() {
 
 async function loadLive() {
   const provider = await providerWithFallback();
+  liveProvider = provider;
   sparks = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
   const totalN = await loadStats();
   lastTotal = totalN;
@@ -209,7 +241,9 @@ async function loadLive() {
    setiap kali tab dibuka lagi. Daftar terbaru + gambar hanya diambil ulang
    bila total berubah, supaya tidak membebani RPC. */
 let sparks = null;
+let liveProvider = null;
 let lastTotal = null;
+let currentTotal = 0;
 let refreshing = false;
 
 async function loadStats() {
@@ -260,26 +294,163 @@ async function refreshIfChanged() {
   refreshing = false;
 }
 
+/* ---- Pencarian: per nomor token atau per alamat wallet ---- */
+function bscscanTokenLink(id) {
+  return "https://bscscan.com/token/" + CONTRACT_ADDRESS + "?a=" + id;
+}
+function setSearchMsg(html) {
+  document.getElementById("searchResult").innerHTML = '<p class="search-msg">' + html + "</p>";
+}
+function resultCardHTML(it) {
+  const v = variantOf(it.id);
+  const art = it.svg
+    ? '<div class="art">' + it.svg + "</div>"
+    : '<div class="art" style="display:flex;align-items:center;justify-content:center;font-size:64px;background:#16224d;color:#94a3b8">&#10022;</div>';
+  return '<div class="result-card">' + art + '<div class="meta"><b>Token #' + it.id + " &middot; " + v + "</b><span>Pemilik: " +
+    (it.owner ? shortAddr(it.owner) : "tidak terbaca") + '</span><br><a href="' + bscscanTokenLink(it.id) +
+    '" target="_blank" rel="noopener">Lihat di BscScan &rarr;</a></div></div>';
+}
+function renderWalletResults(wallet, items) {
+  document.getElementById("searchResult").innerHTML =
+    '<p class="search-msg">' + shortAddr(wallet) + " punya <b>" + items.length + " Sparks</b>:</p>" +
+    '<div class="row" style="margin-top:10px">' + items.map(function (it) {
+      const v = variantOf(it.id);
+      const art = it.svg
+        ? '<div class="art">' + it.svg + "</div>"
+        : '<div class="art ' + v.toLowerCase() + '">&#10022;</div>';
+      return '<div class="mini">' + art + '<div class="cap"><b>#' + it.id + " &middot; " + v +
+        '</b><span><a href="' + bscscanTokenLink(it.id) + '" target="_blank" rel="noopener" style="color:#2dd4bf">BscScan</a></span></div></div>';
+    }).join("") + "</div>";
+}
+async function fetchTokenLive(id) {
+  const [owner, uri] = await Promise.all([sparks.ownerOf(id), sparks.tokenURI(id)]);
+  return { id: id, owner: owner, svg: svgFromTokenURI(uri) };
+}
+async function searchTokenLive(id) {
+  if (!sparks) { setSearchMsg("Tunggu data galeri selesai dimuat, lalu coba lagi."); return; }
+  if (id < 1 || id > currentTotal) { setSearchMsg("Token #" + id + " belum di-mint. Total saat ini " + fmt(currentTotal) + "."); return; }
+  setSearchMsg("Mencari token #" + id + "&hellip;");
+  try {
+    document.getElementById("searchResult").innerHTML = resultCardHTML(await fetchTokenLive(id));
+  } catch (e) { setSearchMsg("Tidak bisa membaca token #" + id + " dari chain. Coba lagi."); }
+}
+/* Kontrak bukan Enumerable (tidak ada tokenOfOwnerByIndex), jadi pemilik
+   dicari dengan memindai ownerOf semua token lewat Multicall3. */
+async function scanOwnersLive(totalN) {
+  const iface = new ethers.Interface(["function ownerOf(uint256) view returns (address)"]);
+  const mc3 = new ethers.Contract(MULTICALL3, MC3_ABI, liveProvider);
+  const owners = new Array(totalN + 1).fill(null);
+  const CHUNK = 50;
+  for (let start = 1; start <= totalN; start += CHUNK) {
+    const ids = [];
+    for (let id = start; id < Math.min(start + CHUNK, totalN + 1); id++) ids.push(id);
+    const calls = ids.map(function (id) {
+      return { target: CONTRACT_ADDRESS, allowFailure: true, callData: iface.encodeFunctionData("ownerOf", [id]) };
+    });
+    try {
+      const res = await mc3.aggregate3(calls);
+      res.forEach(function (r, i) {
+        if (r.success) {
+          try { owners[ids[i]] = iface.decodeFunctionResult("ownerOf", r.returnData)[0]; } catch (e) {}
+        }
+      });
+    } catch (e) {
+      for (const id of ids) {
+        try { owners[id] = await sparks.ownerOf(id); } catch (e2) {}
+      }
+    }
+  }
+  return owners;
+}
+async function searchWalletLive(addr) {
+  if (!sparks) { setSearchMsg("Tunggu data galeri selesai dimuat, lalu coba lagi."); return; }
+  if (!ethers.isAddress(addr)) { setSearchMsg("Alamat wallet tidak valid. Tempel alamat 0x&hellip; lengkap."); return; }
+  const wallet = ethers.getAddress(addr);
+  setSearchMsg("Memeriksa wallet " + shortAddr(wallet) + "&hellip;");
+  try {
+    const bal = Number(await sparks.balanceOf(wallet));
+    if (bal === 0) { setSearchMsg("Wallet " + shortAddr(wallet) + " belum punya Sparks."); return; }
+    setSearchMsg("Wallet ini punya " + bal + " Sparks &mdash; memindai pemilik&hellip;");
+    const owners = await scanOwnersLive(currentTotal);
+    const mine = [];
+    for (let id = 1; id <= currentTotal; id++) {
+      if (owners[id] && owners[id].toLowerCase() === wallet.toLowerCase()) mine.push(id);
+    }
+    if (mine.length === 0) { setSearchMsg("Tidak ketemu di hasil pindai &mdash; coba lagi, mungkin RPC sempat gagal."); return; }
+    const items = [];
+    for (let i = 0; i < mine.length; i += 4) {
+      const chunk = await Promise.all(mine.slice(i, i + 4).map(fetchTokenLive));
+      items.push.apply(items, chunk);
+    }
+    renderWalletResults(wallet, items);
+  } catch (e) { setSearchMsg("Tidak bisa membaca wallet ini dari chain. Coba lagi."); }
+}
+function updateSearchURL(q) {
+  try {
+    const url = new URL(location.href);
+    if (/^0x[0-9a-fA-F]{40}$/.test(q)) { url.searchParams.set("wallet", q); url.searchParams.delete("token"); }
+    else if (/^\d+$/.test(q)) { url.searchParams.set("token", q); url.searchParams.delete("wallet"); }
+    history.replaceState(null, "", url);
+  } catch (e) {}
+}
+function runSearchFromInput() {
+  const q = document.getElementById("searchInput").value.trim();
+  if (!q) return;
+  updateSearchURL(q);
+  if (/^0x[0-9a-fA-F]{40}$/.test(q)) { if (DEMO) searchDemoWallet(q); else searchWalletLive(q); }
+  else if (/^\d+$/.test(q)) { const id = parseInt(q, 10); if (DEMO) searchDemoToken(id); else searchTokenLive(id); }
+  else { setSearchMsg("Masukkan alamat wallet (0x&hellip;) atau nomor token (angka)."); }
+}
+function runSearchFromURL() {
+  const w = params.get("wallet");
+  const t = params.get("token");
+  if (w) { document.getElementById("searchInput").value = w; if (DEMO) searchDemoWallet(w); else searchWalletLive(w); }
+  else if (t) { document.getElementById("searchInput").value = t; const id = parseInt(t, 10); if (DEMO) searchDemoToken(id); else searchTokenLive(id); }
+}
+/* ---- Demo (?demo=1): cari di dalam snapshot, bukan di chain ---- */
+let demoData = null;
+function demoAllTokens() {
+  const all = [];
+  if (demoData && demoData.featured) all.push({ id: 1, owner: "0x0a90F878E4CF3EF3BC0Ee4a67e2FF0166986ad5F", svg: demoData.featured.svg });
+  if (demoData) demoData.latest.forEach(function (it) { all.push(it); });
+  return all;
+}
+function searchDemoToken(id) {
+  const found = demoAllTokens().find(function (it) { return it.id === id; });
+  if (found) { document.getElementById("searchResult").innerHTML = resultCardHTML(found); }
+  else { setSearchMsg("Token #" + id + " tidak ada di data demo (demo hanya memuat 12 mint terbaru + #1)."); }
+}
+function searchDemoWallet(addr) {
+  const mine = demoAllTokens().filter(function (it) { return it.owner && it.owner.toLowerCase() === addr.toLowerCase(); });
+  if (mine.length === 0) { setSearchMsg("Wallet ini tidak punya Sparks di data demo (demo hanya memuat 12 mint terbaru + #1)."); return; }
+  renderWalletResults(addr, mine);
+}
+
 async function loadDemo() {
   const banner = document.getElementById("demobanner");
   try {
     const res = await fetch("./gallery-demo.json");
     const data = await res.json();
+    demoData = data;
     banner.style.display = "block";
     banner.textContent = "DEMO \u2014 data contoh dari " + data.generated_at_wib + ", bukan data live.";
     renderStats(data.total, data.difficulty);
     renderFeatured(data.featured ? data.featured.svg : null);
     renderLatest(data.latest);
     renderUpdated(data.generated_at_wib + " (demo)");
+    runSearchFromURL();
   } catch (e) {
     renderUnavailable("file demo tidak ditemukan.");
   }
 }
 
+document.getElementById("searchBtn").addEventListener("click", runSearchFromInput);
+document.getElementById("searchInput").addEventListener("keydown", function (e) { if (e.key === "Enter") runSearchFromInput(); });
+
 if (DEMO) { loadDemo(); }
 else if (typeof ethers === "undefined") { renderUnavailable("library ethers gagal dimuat."); }
 else {
-  loadLive().catch(function (e) { renderUnavailable("RPC tidak merespons."); });
+  loadLive().then(function () { runSearchFromURL(); }).catch(function (e) { renderUnavailable("RPC tidak merespons."); });
   setInterval(refreshIfChanged, 60000);
   window.addEventListener("focus", refreshIfChanged);
 }
