@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-11-27 01:13 WIB",
- "generated_at_utc": "2026-11-26 18:13 UTC",
+ "generated_at": "2026-11-28 10:24 WIB",
+ "generated_at_utc": "2026-11-28 03:24 UTC",
  "catalog": "Agent ID Hub project catalog, generated 17 Nov 2026 (1,107 projects)",
  "seed_analysis": "analisis-40-proyek-agent-id.md, 27 Nov 2026",
  "counts": {
@@ -43,7 +43,7 @@
     "url": "https://agentidhub.eth.limo/passport.html",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -66,13 +66,13 @@
     "url": "https://starsagent.org/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": "0xf71832f4ed1839bdb8f8dbf43f3570b557218888",
     "total_supply": 1000000000000000000000000000,
     "display": "totalSupply 1,000,000,000 (÷10^18)",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": null,
@@ -89,7 +89,7 @@
     "url": "https://ptah.trade/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": "0xb0d5f3108af164f5f7046f53ab59fd2779812d10",
@@ -112,7 +112,7 @@
     "url": "https://web3.binance.com/en/dev-docs/products/agentic-wallet",
     "status": "ok",
     "http_code": 202,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -135,13 +135,13 @@
     "url": "https://ngmiwagmi.art/mint",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": "0x84ABE26F2A66B16b2273986EabFA01ecc6E4b30f",
     "total_supply": 264,
     "display": "totalSupply 264",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": "2026-10-28",
@@ -158,7 +158,7 @@
     "url": "https://mint.mchain.art",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -181,13 +181,13 @@
     "url": "https://seed.mchain.art/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": "0x05fd19702029c473683d6188cD856e59038278F4",
     "total_supply": 9909,
     "display": "totalSupply 9,909",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": null,
@@ -204,7 +204,7 @@
     "url": "https://skullaid.site",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -227,7 +227,7 @@
     "url": "https://eips.ethereum.org/EIPS/eip-8004",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -250,7 +250,7 @@
     "url": "https://www.osbookbnb.org/",
     "status": "http_404",
     "http_code": 404,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -273,7 +273,7 @@
     "url": "https://agentpad.trade/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": "0xD6AD76e8d502de733ab1eCEfC3E36C56Cb3071ba",
@@ -296,7 +296,7 @@
     "url": "https://gang.fun/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": "0x315Ba2e8952D06094CC636b2B84229FA32fb23A7",
@@ -319,7 +319,7 @@
     "url": "https://bn.shaniu.ai/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -348,7 +348,7 @@
     "contract": "0x644849990Ea2E79eE5f6832c5E3cFF690aEcC686",
     "total_supply": 13400000000000000000000000,
     "display": "totalSupply 13,400,000 (÷10^18)",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": null,
@@ -365,7 +365,7 @@
     "url": "https://hashdroids.fun/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -388,7 +388,7 @@
     "url": "https://shit.cash/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -411,7 +411,7 @@
     "url": "https://dottai.xyz/",
     "status": "http_404",
     "http_code": 404,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -434,7 +434,7 @@
     "url": "https://bibiai.fun/",
     "status": "http_5xx",
     "http_code": 525,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": null,
@@ -455,15 +455,15 @@
    "category": "Inscription",
    "site": {
     "url": "https://binanceai.site/",
-    "status": "ok",
-    "http_code": 202,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "status": "http_5xx",
+    "http_code": 502,
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": "0x0952b47567e6eF2704D43ca8bcc2928e6108D8E7",
     "total_supply": 21000000000000000000000000,
     "display": "totalSupply 21,000,000 (÷10^18)",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": null,
@@ -480,7 +480,7 @@
     "url": "https://agentidlive.ai/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -503,7 +503,7 @@
     "url": "https://bnb.fan/agent-id",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -526,7 +526,7 @@
     "url": "https://aiagentid.vercel.app/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:23 WIB"
    },
    "onchain": {
     "contract": null,
@@ -549,13 +549,13 @@
     "url": "https://agent-sigils.netlify.app/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": "0xf865018A1638A36130cCc1C99732b536c0B4D1A7",
     "total_supply": 142,
     "display": "totalSupply 142",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": "2026-11-12",
@@ -572,7 +572,7 @@
     "url": "https://tapereaders.netlify.app/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": null,
@@ -595,13 +595,13 @@
     "url": "https://tagai.fun/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": "0xfa81c13f979f0dff4a40b68c4aba147fa0723333",
     "total_supply": 1000000000000000000000000000,
     "display": "totalSupply 1,000,000,000 (÷10^18)",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": null,
@@ -618,7 +618,7 @@
     "url": "https://gearz.fun/contracts",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": null,
@@ -647,7 +647,7 @@
     "contract": "0xAbccd3Dfbb3b8e5c3EB6aE4De90AA22Db2286d1b",
     "total_supply": 3333,
     "display": "totalSupply 3,333",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": "2026-10-29",
@@ -670,7 +670,7 @@
     "contract": "0xA6574a66E45DeDFc878d173522836A49685ea307",
     "total_supply": 89,
     "display": "totalSupply 89",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": null,
@@ -687,13 +687,13 @@
     "url": "https://agentcity.pages.dev/",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:12 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": "0x04a9F5a5f6409DAd7eD9eC54bBACF89663651cD7",
     "total_supply": 68,
     "display": "totalSupply 68",
-    "checked_at": "2026-11-27 01:13 WIB",
+    "checked_at": "2026-11-28 10:24 WIB",
     "note": null
    },
    "x_last_active": null,
@@ -779,7 +779,7 @@
     "url": "https://scarabkey.netlify.app",
     "status": "ok",
     "http_code": 200,
-    "checked_at": "2026-11-27 01:13 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": null,
@@ -802,7 +802,7 @@
     "url": "https://gridpunks-vert.vercel.app/",
     "status": "http_404",
     "http_code": 404,
-    "checked_at": "2026-11-27 01:13 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": null,
@@ -825,7 +825,7 @@
     "url": "https://8000-agqwonabb5miyfdf3pgbwfi7x4.instabox.tech/",
     "status": "http_404",
     "http_code": 404,
-    "checked_at": "2026-11-27 01:13 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": null,
@@ -848,7 +848,7 @@
     "url": "https://orvynmint.site/",
     "status": "http_404",
     "http_code": 404,
-    "checked_at": "2026-11-27 01:13 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": null,
@@ -871,7 +871,7 @@
     "url": "https://four.meme",
     "status": "blocked",
     "http_code": 403,
-    "checked_at": "2026-11-27 01:13 WIB"
+    "checked_at": "2026-11-28 10:24 WIB"
    },
    "onchain": {
     "contract": null,
@@ -938,8 +938,8 @@
    "name": "AgentQuest",
    "note": "Soulbound achievement badges",
    "contract": "0x26ad277193ff31bd086a47bf7b1d25a93573c989",
-   "display": "1,080 badges minted",
-   "checked_at": "2026-11-27 01:13 WIB",
+   "display": "1,231 badges minted",
+   "checked_at": "2026-11-28 10:24 WIB",
    "live_note": null
   },
   {
@@ -947,8 +947,8 @@
    "name": "Quest Sparks",
    "note": "Animated on-chain NFT, free 1/wallet for badge holders",
    "contract": "0x20ef401acddb836e3576aade51f620f6a99631cb",
-   "display": "5 / 3,333 minted",
-   "checked_at": "2026-11-27 01:13 WIB",
+   "display": "174 / 3,333 minted",
+   "checked_at": "2026-11-28 10:24 WIB",
    "live_note": null
   },
   {
