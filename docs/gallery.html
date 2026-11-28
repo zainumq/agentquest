@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Galeri Quest Sparks — semua Sparks yang sudah di-mint, langsung dari chain. Epic 5%, Rare 25%, Common 70%.">
+<title>Galeri Quest Sparks — AgentQuest</title>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0a1128; color: #e5e7eb; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .page { max-width: 480px; margin: 0 auto; padding: 22px 18px 28px; }
+  .back { display: inline-block; color: #2dd4bf; font-size: 13px; text-decoration: none; margin-bottom: 18px; }
+  .back:hover { text-decoration: underline; }
+  .eyebrow { color: #e8b84b; font-size: 11px; letter-spacing: 2.5px; font-weight: 700; }
+  h1 { font-size: 30px; margin: 8px 0 6px; color: #fff; }
+  .sub { color: #94a3b8; font-size: 14px; line-height: 1.5; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0 10px; }
+  .stat { background: #111c33; border: 1px solid #1e2d4d; border-radius: 14px; padding: 12px 14px; }
+  .stat b { display: block; font-size: 26px; color: #fff; }
+  .stat span { font-size: 12px; color: #94a3b8; }
+  .stat.epic b { color: #a78bfa; }
+  .stat.rare b { color: #2dd4bf; }
+  .stat.common b { color: #f59e0b; }
+  .diff { font-size: 12.5px; color: #94a3b8; margin-bottom: 20px; }
+  .diff b { color: #e8b84b; font-weight: 600; }
+  h2 { font-size: 16px; color: #fff; margin: 22px 0 10px; }
+  .featured { background: #111c33; border: 1px solid #1e2d4d; border-radius: 16px; overflow: hidden; }
+  .featured .art { display: block; width: 100%; aspect-ratio: 1; }
+  .featured .art svg { display: block; width: 100%; height: 100%; }
+  .featured .meta { padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; }
+  .featured .meta b { font-size: 15px; color: #fff; }
+  .featured .meta span { font-size: 12.5px; color: #94a3b8; }
+  .tag { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+  .tag.epic { color: #0a1128; background: #a78bfa; }
+  .tag.rare { color: #0a1128; background: #2dd4bf; }
+  .tag.common { color: #0a1128; background: #f59e0b; }
+  .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .mini { border-radius: 14px; overflow: hidden; background: #111c33; border: 1px solid #1e2d4d; }
+  .mini .art { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+  .mini .art svg { display: block; width: 100%; height: 100%; }
+  .mini .art.epic { background: radial-gradient(circle at 50% 40%, #7c3aed, #2e1065 75%); color: #c4b5fd; }
+  .mini .art.rare { background: radial-gradient(circle at 50% 40%, #0d9488, #042f2e 75%); color: #5eead4; }
+  .mini .art.common { background: radial-gradient(circle at 50% 40%, #b45309, #451a03 75%); color: #fcd34d; }
+  .mini .cap { padding: 8px 10px; font-size: 12.5px; }
+  .mini .cap b { display: block; color: #fff; font-size: 13px; }
+  .mini .cap span { color: #94a3b8; font-size: 11.5px; word-break: break-all; }
+  .variant { display: flex; gap: 12px; align-items: center; background: #111c33; border: 1px solid #1e2d4d; border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+  .variant .art { width: 64px; height: 64px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 30px; flex: none; }
+  .variant .art.epic { background: radial-gradient(circle at 50% 40%, #7c3aed, #2e1065 75%); color: #c4b5fd; }
+  .variant .art.rare { background: radial-gradient(circle at 50% 40%, #0d9488, #042f2e 75%); color: #5eead4; }
+  .variant .art.common { background: radial-gradient(circle at 50% 40%, #b45309, #451a03 75%); color: #fcd34d; }
+  .variant b { display: block; color: #fff; font-size: 15px; }
+  .variant span { color: #94a3b8; font-size: 12.5px; line-height: 1.45; }
+  .cta { display: block; margin-top: 22px; background: #e8b84b; color: #0a1128; text-align: center; font-weight: 700; font-size: 15px; padding: 13px; border-radius: 14px; text-decoration: none; }
+  .foot { margin-top: 14px; font-size: 11.5px; color: #64748b; line-height: 1.5; text-align: center; }
+  .foot code { color: #64748b; word-break: break-all; }
+  .loading { color: #94a3b8; font-size: 13px; padding: 12px 0; }
+  .demobanner { display: none; background: #451a03; border: 1px solid #b45309; color: #fcd34d; font-size: 12px; border-radius: 10px; padding: 8px 12px; margin-bottom: 14px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="./index.html">&larr; AgentQuest</a>
+  <div class="demobanner" id="demobanner"></div>
+  <div class="eyebrow">AGENTQUEST &middot; QUEST SPARKS</div>
+  <h1>Galeri Sparks</h1>
+  <p class="sub">Semua Sparks yang sudah di-mint &mdash; langsung dari chain. <span id="totalLine">Memuat&hellip;</span></p>
+
+  <div class="stats">
+    <div class="stat"><b id="statMinted">&mdash;</b><span>/ 3.333 minted</span></div>
+    <div class="stat epic"><b id="statEpic">&mdash;</b><span>Epic &middot; 5%</span></div>
+    <div class="stat rare"><b id="statRare">&mdash;</b><span>Rare &middot; 25%</span></div>
+    <div class="stat common"><b id="statCommon">&mdash;</b><span>Common &middot; 70%</span></div>
+  </div>
+  <p class="diff" id="diffLine">Difficulty &hellip;</p>
+
+  <h2>&#10022; Mint pertama</h2>
+  <div class="featured">
+    <div class="art" id="featuredArt"><div class="loading" style="padding:20px">Memuat gambar dari chain&hellip;</div></div>
+    <div class="meta">
+      <div><b>Token #1</b><br><span id="featuredOwner">kingkoung.ai &middot; 26 Nov 2026</span></div>
+      <span class="tag rare">RARE</span>
+    </div>
+  </div>
+
+  <h2>Terbaru di-mint</h2>
+  <div class="row" id="latestRow"><div class="loading">Memuat dari chain&hellip;</div></div>
+
+  <h2>Varian</h2>
+  <div class="variant"><div class="art epic">&#10022;</div><div><b>Epic &middot; <span id="varEpic">&mdash;</span> minted</b><span>Peluang 5% &middot; ungu &middot; paling langka</span></div></div>
+  <div class="variant"><div class="art rare">&#10022;</div><div><b>Rare &middot; <span id="varRare">&mdash;</span> minted</b><span>Peluang 25% &middot; teal &middot; seperti token #1</span></div></div>
+  <div class="variant"><div class="art common">&#10022;</div><div><b>Common &middot; <span id="varCommon">&mdash;</span> minted</b><span>Peluang 70% &middot; emas &middot; paling banyak</span></div></div>
+
+  <a class="cta" href="./miner.html">Mine yours &rarr;</a>
+  <p class="foot">Data dibaca langsung dari kontrak Quest Sparks <code>0x20ef401acddb836e3576aade51f620f6a99631cb</code> di BSC. Jumlah per varian dihitung dari aturan kontrak (tokenId % 20). Halaman ini memperbarui sendiri setiap 60 detik selama dibuka. <span id="updatedLine"></span></p>
+</div>
+<script>
+const CONTRACT_ADDRESS = "0x20ef401acddb836e3576aade51f620f6a99631cb";
+const RPC_URLS = [
+  "https://bsc-dataseed1.bnbchain.org",
+  "https://bsc-dataseed2.bnbchain.org",
+  "https://bsc-dataseed1.bnbchain.org:8545"
+];
+const MAX_SUPPLY = 3333;
+const LATEST_COUNT = 12;
+const ABI = [
+  "function totalMinted() view returns (uint256)",
+  "function difficultyBits() view returns (uint8)",
+  "function ownerOf(uint256) view returns (address)",
+  "function tokenURI(uint256) view returns (string)"
+];
+const params = new URLSearchParams(location.search);
+const DEMO = params.get("demo") === "1";
+
+function variantOf(id) {
+  const r = id % 20;
+  if (r === 0) return "Epic";
+  if (r <= 4) return "Rare";
+  return "Common";
+}
+function variantCounts(total) {
+  const epic = Math.floor(total / 20);
+  const rare = 4 * Math.floor(total / 20) + Math.min(4, total % 20);
+  return { epic, rare, common: total - epic - rare };
+}
+function shortAddr(a) {
+  return a.slice(0, 6) + "\u2026" + a.slice(-4);
+}
+function svgFromTokenURI(uri) {
+  try {
+    const json = JSON.parse(atob(uri.split(",")[1]));
+    const img = json.image || "";
+    if (img.startsWith("data:image/svg+xml;base64,")) {
+      return atob(img.split(",")[1]);
+    }
+    return null;
+  } catch (e) { return null; }
+}
+function fmt(n) { return n.toLocaleString("id-ID"); }
+
+function renderStats(total, difficulty) {
+  const c = variantCounts(total);
+  document.getElementById("totalLine").textContent = fmt(total) + " dari 3.333.";
+  document.getElementById("statMinted").textContent = fmt(total);
+  document.getElementById("statEpic").textContent = fmt(c.epic);
+  document.getElementById("statRare").textContent = fmt(c.rare);
+  document.getElementById("statCommon").textContent = fmt(c.common);
+  document.getElementById("varEpic").textContent = fmt(c.epic);
+  document.getElementById("varRare").textContent = fmt(c.rare);
+  document.getElementById("varCommon").textContent = fmt(c.common);
+  const tier = Math.floor(total / 333);
+  const nextTierAt = (tier + 1) * 333;
+  const remaining = nextTierAt - total;
+  const diffLine = difficulty >= 26
+    ? "Difficulty <b>" + difficulty + " bit</b> &middot; sudah di maks (26 bit)"
+    : "Difficulty <b>" + difficulty + " bit</b> &middot; " + fmt(remaining) + " mint lagi ke tier " + fmt(nextTierAt) + " (naik ke " + (difficulty + 1) + ")";
+  document.getElementById("diffLine").innerHTML = diffLine;
+}
+function renderFeatured(svg) {
+  const el = document.getElementById("featuredArt");
+  if (svg) { el.innerHTML = svg; }
+  else { el.innerHTML = '<div class="art rare" style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:64px;background:radial-gradient(circle at 50% 40%, #0d9488, #042f2e 75%);color:#5eead4">&#10022;</div>'; }
+}
+function renderLatest(items) {
+  const row = document.getElementById("latestRow");
+  row.innerHTML = items.map(function (it) {
+    const v = variantOf(it.id);
+    const art = it.svg
+      ? '<div class="art">' + it.svg + "</div>"
+      : '<div class="art ' + v.toLowerCase() + '">&#10022;</div>';
+    return '<div class="mini">' + art +
+      '<div class="cap"><b>#' + it.id + " &middot; " + v + "</b><span>" +
+      (it.owner ? shortAddr(it.owner) : "pemilik tidak terbaca") + "</span></div></div>";
+  }).join("");
+}
+function renderUpdated(when) {
+  document.getElementById("updatedLine").textContent = "Terakhir diperbarui " + when + ".";
+}
+function renderUnavailable(msg) {
+  document.getElementById("totalLine").textContent = "Data tidak tersedia — " + msg;
+  document.getElementById("diffLine").textContent = "Difficulty tidak terbaca dari kontrak.";
+  document.getElementById("latestRow").innerHTML = '<div class="loading">Mint terbaru tidak bisa dimuat.</div>';
+  renderUpdated(new Date().toLocaleString("id-ID"));
+}
+
+async function providerWithFallback() {
+  let lastErr = null;
+  for (const url of RPC_URLS) {
+    try {
+      const p = new ethers.JsonRpcProvider(url);
+      await p.getBlockNumber();
+      return p;
+    } catch (e) { lastErr = e; }
+  }
+  throw lastErr || new Error("semua RPC gagal");
+}
+
+async function loadLive() {
+  const provider = await providerWithFallback();
+  sparks = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+  const totalN = await loadStats();
+  lastTotal = totalN;
+  await loadTokens(totalN);
+  renderUpdated(new Date().toLocaleString("id-ID"));
+}
+
+/* Auto-update: selama halaman dibuka, cek total mint tiap 60 detik dan
+   setiap kali tab dibuka lagi. Daftar terbaru + gambar hanya diambil ulang
+   bila total berubah, supaya tidak membebani RPC. */
+let sparks = null;
+let lastTotal = null;
+let refreshing = false;
+
+async function loadStats() {
+  const [total, difficulty] = await Promise.all([
+    sparks.totalMinted(), sparks.difficultyBits()
+  ]);
+  const totalN = Number(total);
+  renderStats(totalN, Number(difficulty));
+  return totalN;
+}
+
+async function loadTokens(totalN) {
+  const ids = [];
+  for (let i = 0; i < LATEST_COUNT && totalN - i >= 1; i++) ids.push(totalN - i);
+  if (!ids.includes(1)) ids.push(1);
+  async function fetchToken(id) {
+    try {
+      const [owner, uri] = await Promise.all([sparks.ownerOf(id), sparks.tokenURI(id)]);
+      return { id, owner, svg: svgFromTokenURI(uri) };
+    } catch (e) {
+      try { const owner = await sparks.ownerOf(id); return { id, owner, svg: null }; }
+      catch (e2) { return { id, owner: null, svg: null }; }
+    }
+  }
+  // 4 panggilan paralel sekaligus supaya halaman tidak lambat.
+  const results = [];
+  for (let i = 0; i < ids.length; i += 4) {
+    const chunk = await Promise.all(ids.slice(i, i + 4).map(fetchToken));
+    results.push.apply(results, chunk);
+  }
+  const byId = {};
+  results.forEach(function (r) { byId[r.id] = r; });
+  renderFeatured(byId[1] ? byId[1].svg : null);
+  renderLatest(ids.filter(function (id) { return id !== 1; }).map(function (id) { return byId[id]; }).filter(Boolean));
+}
+
+async function refreshIfChanged() {
+  if (refreshing || !sparks) return;
+  refreshing = true;
+  try {
+    const totalN = await loadStats();
+    if (totalN !== lastTotal) {
+      lastTotal = totalN;
+      await loadTokens(totalN);
+    }
+    renderUpdated(new Date().toLocaleString("id-ID"));
+  } catch (e) { /* biarkan data lama, coba lagi di interval berikut */ }
+  refreshing = false;
+}
+
+async function loadDemo() {
+  const banner = document.getElementById("demobanner");
+  try {
+    const res = await fetch("./gallery-demo.json");
+    const data = await res.json();
+    banner.style.display = "block";
+    banner.textContent = "DEMO \u2014 data contoh dari " + data.generated_at_wib + ", bukan data live.";
+    renderStats(data.total, data.difficulty);
+    renderFeatured(data.featured ? data.featured.svg : null);
+    renderLatest(data.latest);
+    renderUpdated(data.generated_at_wib + " (demo)");
+  } catch (e) {
+    renderUnavailable("file demo tidak ditemukan.");
+  }
+}
+
+if (DEMO) { loadDemo(); }
+else if (typeof ethers === "undefined") { renderUnavailable("library ethers gagal dimuat."); }
+else {
+  loadLive().catch(function (e) { renderUnavailable("RPC tidak merespons."); });
+  setInterval(refreshIfChanged, 60000);
+  window.addEventListener("focus", refreshIfChanged);
+}
+</script>
+</body>
+</html>
