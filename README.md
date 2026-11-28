@@ -45,7 +45,7 @@ Community Contributions 25 per verified contribution (max 100) · Quest
 Sparks 10 flat for holding ≥1 (extras add 0). Quest Sparks are a
 transferable collection — the 10 points come from ownership, so they could
 be bought if a secondary market appears (none exists yet). Demo wallet
-kingkoung.ai: 337/1,000 (Silver) = 100 + 200 + 0 + 27 + 0 + 0 + 10. See
+kingkoung.ai: 340/1,000 (Silver) = 100 + 200 + 0 + 30 + 0 + 0 + 10. See
 [Try it](#try-it).
 
 ## Architecture
@@ -148,7 +148,7 @@ designed, not a bug.
 
 Reviewers can inspect a real profile without connecting anything:
 
-- **Demo profile:** kingkoung.ai — score 337/1,000 (Silver), 4 badges — live streak and score on the [profile](https://zainumq.github.io/agentquest/profile.html?wallet=0x0a90F878E4CF3EF3BC0Ee4a67e2FF0166986ad5F)
+- **Demo profile:** kingkoung.ai — score 340/1,000 (Silver), 4 badges — live streak and score on the [profile](https://zainumq.github.io/agentquest/profile.html?wallet=0x0a90F878E4CF3EF3BC0Ee4a67e2FF0166986ad5F)
 - Any wallet can be viewed the same way:
   `profile.html?wallet=<address>`
 
